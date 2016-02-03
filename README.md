@@ -1,2 +1,3 @@
 # bakon
-bakon device monitor
+
+Bakon device monitor.

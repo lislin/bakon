@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+ 
+<beans>
+	<bean id="properties" class="com.chemao.trade.internal.impl.PropertyServiceImpl">
+		<constructor-arg value="${env}" />
+		<constructor-arg value="/opt/properties/trade-engine.properties" />
+	</bean>
+
+	<bean id="apiHelper" class="com.chemao.trade.internal.impl.HttpHelper">
+		<constructor-arg ref="properties" />
+	</bean>
+	<bean id="skuService" class="com.chemao.trade.internal.impl.SKUServiceImpl">
+		<constructor-arg ref="apiHelper" />
+	</bean>
+	<bean id="orderService" class="com.chemao.trade.internal.impl.OrderServiceImpl">
+		<constructor-arg ref="apiHelper" />
+	</bean>
+
+	<bean id="tradeTimeout" class="com.chemao.trade.impl.RedisTradeTimeout">
+		<constructor-arg ref="properties" />
+		<constructor-arg ref="orderService" />
+		<constructor-arg ref="skuService" />
+	</bean>
+	<bean id="tradeApplyListener" class="com.chemao.trade.TradeApplyListener">
+		<constructor-arg ref="skuService" />
+		<constructor-arg ref="orderService" />
+		<property name="tradeTimeout" ref="tradeTimeout" />
+	</bean>
+	<bean id="tradeApplyResultNotify" class="com.chemao.trade.impl.RedisTradeApplyResultNotify">
+		<constructor-arg ref="properties" />
+	</bean>
+	<bean id="tradeEngine" class="com.chemao.trade.TradeEngine" init-method="start">
+		<constructor-arg ref="properties" />
+		<constructor-arg ref="tradeApplyListener" />
+		<constructor-arg ref="tradeApplyResultNotify" />
+	</bean>
+	<bean id="tradeApplyService" class="com.chemao.trade.impl.RedisTradeApplyServiceImpl">
+		<constructor-arg ref="properties" />
+		<constructor-arg ref="tradeApplyListener" />
+	</bean>
+</beans>

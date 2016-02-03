@@ -1,0 +1,70 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>bakon-web</artifactId>
+	<name>${project.artifactId} v${project.version}</name>
+	<packaging>war</packaging>
+	<version>${bakon.version}</version>
+
+	<parent>
+		<groupId>cn.bakon</groupId>
+		<artifactId>bakon-all</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<dependencies>
+	    <!--test util-->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymockclassextension</artifactId>
+		</dependency>
+		<!--logging-->
+	    <dependency>
+      		<groupId>org.slf4j</groupId>
+	      	<artifactId>slf4j-api</artifactId>
+	    </dependency>
+	    <dependency>
+	      	<groupId>org.slf4j</groupId>
+	      	<artifactId>slf4j-log4j12</artifactId>
+	    </dependency>
+
+	    <dependency>
+			<groupId>cn.bakon</groupId>
+			<artifactId>bakon-core</artifactId>
+	    </dependency>
+	    <dependency>
+			<groupId>cn.bakon</groupId>
+			<artifactId>bakon-connector</artifactId>
+	    </dependency>
+
+	    <dependency>
+	      	<groupId>org.springframework</groupId>
+	      	<artifactId>spring</artifactId>
+	    </dependency>
+	</dependencies>
+
+	<build>
+		<finalName>bakon-web</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<webResources>
+						<resource>
+							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
+							<filtering>true</filtering>
+							<targetPath>WEB-INF</targetPath>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
