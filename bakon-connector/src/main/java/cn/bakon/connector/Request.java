@@ -93,7 +93,7 @@ public abstract class Request {
 		}
 	}
 
-	protected byte parseType() {
+	protected int parseType() {
 		if (this instanceof AlarmSetting)
 			return 0x01;
 		if (this instanceof AlarmSwitch)
@@ -197,7 +197,7 @@ public abstract class Request {
 		}
 
 		@Override
-		protected abstract byte parseType();
+		protected abstract int parseType();
 
 		@Override
 		protected ByteBuf renderData(ByteBuf buf) {
@@ -215,7 +215,7 @@ public abstract class Request {
 		}
 
 		@Override
-		protected byte parseType() {
+		protected int parseType() {
 			return 0x08;
 		}
 	}
@@ -230,7 +230,7 @@ public abstract class Request {
 		}
 
 		@Override
-		protected byte parseType() {
+		protected int parseType() {
 			return 0x09;
 		}
 	}
@@ -245,7 +245,7 @@ public abstract class Request {
 		}
 
 		@Override
-		protected byte parseType() {
+		protected int parseType() {
 			return 0x0a;
 		}
 	}
@@ -260,7 +260,7 @@ public abstract class Request {
 		}
 
 		@Override
-		protected byte parseType() {
+		protected int parseType() {
 			return 0x0b;
 		}
 	}
@@ -275,7 +275,7 @@ public abstract class Request {
 		}
 
 		@Override
-		protected byte parseType() {
+		protected int parseType() {
 			return 0x0c;
 		}
 	}
