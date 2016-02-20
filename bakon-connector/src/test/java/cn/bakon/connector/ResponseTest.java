@@ -88,4 +88,14 @@ public class ResponseTest {
 		assertEquals(response.getError(), response2.getError());
 		assertEquals(response.getValue(), response2.getValue());
 	}
+
+	@Test
+	public void bit_test() {
+		System.out.println(((byte) 2) & 0x0F);
+		byte b =  (byte) ((8 << 4) | 9);
+		System.out.println(b);
+		System.out.println(b >> 4);
+		System.out.println(b & 0x0F);
+		System.out.println((byte)9);
+	}
 }

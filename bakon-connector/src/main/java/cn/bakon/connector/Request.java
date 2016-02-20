@@ -177,15 +177,17 @@ public abstract class Request {
 
 		public Password(AddressNO addressNO, ByteBuf buf) {
 			super(addressNO);
-			// FIXME fix password data reading by protocol
-			this.num1 = buf.readByte();
-			this.num2 = buf.readByte();
+			byte h = buf.readByte();
+			// int high = h >> 4;//TODO assert 0
+			this.num1 = h & 0x0F;
+			byte l = buf.readByte();
+			this.num2 = l >> 4;
+			this.num3 = l & 0x0F;
 		}
 
 		@Override
 		protected ByteBuf renderData(ByteBuf buf) {
-			// FIXME fix password data writing by protocol
-			return buf.writeByte(this.num1).writeByte(this.num2);
+			return buf.writeByte(this.num1).writeByte((this.num2 << 4) | this.num3);
 		}
 	}
 
