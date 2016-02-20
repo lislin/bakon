@@ -100,6 +100,7 @@ public abstract class Response {
 
 		public AlarmSetting(boolean error, int threshold) {
 			super(error);
+			// TODO assert less than 500
 			this.threshold = threshold;
 		}
 

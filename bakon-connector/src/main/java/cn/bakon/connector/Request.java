@@ -113,6 +113,7 @@ public abstract class Request {
 
 		public AlarmSetting(AddressNO addressNO, int threshold) {
 			super(addressNO);
+			// TODO assert less than 500
 			this.threshold = threshold;
 		}
 
