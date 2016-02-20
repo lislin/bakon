@@ -1,5 +1,7 @@
 package cn.bakon.connector;
 
+import java.nio.ByteOrder;
+
 import cn.bakon.BakonException;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -247,37 +249,60 @@ public abstract class Response {
 	}
 
 	public abstract static class VoltageQuery extends Query {
+		private boolean negative;
 		private int value;
+		private boolean closed;
+
+		public boolean getNegative() {
+			return this.negative;
+		}
 
 		public int getValue() {
 			return this.value;
 		}
 
-		public VoltageQuery(boolean error, int value) {
+		public boolean getClosed() {
+			return this.closed;
+		}
+
+		public VoltageQuery(boolean error, boolean closed, boolean negative, int value) {
 			super(error);
+			this.closed = closed;
+			this.negative = negative;
 			this.value = value;
 		}
 
 		public VoltageQuery(boolean error, ByteBuf buf) {
 			super(error);
-			// FIXME read Voltage
-			this.value = buf.readShort();
+			buf.order(ByteOrder.LITTLE_ENDIAN);
+			int v = buf.readChar();
+			buf.order(ByteOrder.BIG_ENDIAN);
 
-			// byte b = buf.readByte();
-			// var low = b & 0x0F;
-			// var high = b >> 4;
+			this.closed = v == 0xf000;
+			if (this.closed)
+				return;
+
+			this.negative = v >> 15 == 1;
+			this.value = v & ~(1 << 15);
 		}
 
 		@Override
 		protected ByteBuf renderData(ByteBuf buf) {
-			// FIXME write Voltage
-			return buf.writeShort(this.value);
+			buf.order(ByteOrder.LITTLE_ENDIAN);
+			if (this.closed)
+				buf.writeChar(0xf000);
+			else
+				buf.writeChar(
+						this.negative
+								? this.value | (1 << 15)
+								: this.value);
+			return buf.order(ByteOrder.BIG_ENDIAN);
 		}
 	}
 
 	public static class Voltage1Query extends VoltageQuery {
-		public Voltage1Query(boolean error, int value) {
-			super(error, value);
+		public Voltage1Query(boolean error, boolean closed, boolean negative, int value) {
+			super(error, closed, negative, value);
 		}
 
 		public Voltage1Query(boolean error, ByteBuf buf) {
@@ -291,8 +316,8 @@ public abstract class Response {
 	}
 
 	public static class Voltage2Query extends VoltageQuery {
-		public Voltage2Query(boolean error, int value) {
-			super(error, value);
+		public Voltage2Query(boolean error, boolean closed, boolean negative, int value) {
+			super(error, closed, negative, value);
 		}
 
 		public Voltage2Query(boolean error, ByteBuf buf) {
@@ -306,8 +331,8 @@ public abstract class Response {
 	}
 
 	public static class Voltage3Query extends VoltageQuery {
-		public Voltage3Query(boolean error, int value) {
-			super(error, value);
+		public Voltage3Query(boolean error, boolean closed, boolean negative, int value) {
+			super(error, closed, negative, value);
 		}
 
 		public Voltage3Query(boolean error, ByteBuf buf) {

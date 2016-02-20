@@ -64,38 +64,56 @@ public class ResponseTest {
 
 	@Test
 	public void Voltage1Query_test() {
-		Voltage1Query response = new Voltage1Query(true, 1);
+		Voltage1Query response = new Voltage1Query(true, false, false, 1000);
 		ByteBuf buf = response.getBytes();
 		Voltage1Query response2 = (Voltage1Query) Response.parse(buf);
 		assertEquals(response.getError(), response2.getError());
+		assertEquals(response.getClosed(), response2.getClosed());
+		assertEquals(response.getNegative(), response2.getNegative());
 		assertEquals(response.getValue(), response2.getValue());
 	}
 
 	@Test
 	public void Voltage2Query_test() {
-		Voltage2Query response = new Voltage2Query(true, 1);
+		Voltage2Query response = new Voltage2Query(true, false, true, 1000);
 		ByteBuf buf = response.getBytes();
 		Voltage2Query response2 = (Voltage2Query) Response.parse(buf);
 		assertEquals(response.getError(), response2.getError());
+		assertEquals(response.getClosed(), response2.getClosed());
+		assertEquals(response.getNegative(), response2.getNegative());
 		assertEquals(response.getValue(), response2.getValue());
 	}
 
 	@Test
 	public void Voltage3Query_test() {
-		Voltage3Query response = new Voltage3Query(true, 1);
+		Voltage3Query response = new Voltage3Query(false, true, false, 0);
 		ByteBuf buf = response.getBytes();
 		Voltage3Query response2 = (Voltage3Query) Response.parse(buf);
 		assertEquals(response.getError(), response2.getError());
+		assertEquals(response.getClosed(), response2.getClosed());
+		assertEquals(response.getNegative(), response2.getNegative());
 		assertEquals(response.getValue(), response2.getValue());
 	}
 
 	@Test
 	public void bit_test() {
 		System.out.println(((byte) 2) & 0x0F);
-		byte b =  (byte) ((8 << 4) | 9);
+		byte b = (byte) ((8 << 4) | 9);
 		System.out.println(b);
 		System.out.println(b >> 4);
 		System.out.println(b & 0x0F);
-		System.out.println((byte)9);
+		System.out.println(0xf000);
+		System.out.println(0x83E8 >> 15);
+		System.out.println((0x83E8 & ~(1 << 15)));
+		System.out.println(0x03E8 | (1 << 15));
+
+		System.out.println(100 | (1 << 15));
+
+		System.out.println(33768 >> 15);
+		System.out.println((33768 & ~(1 << 15)));
+		System.out.println((1000 | (1 << 15)));
+		System.out.println((short) (-31768 & ~(1 << 15)));
+		System.out.println((short) (1000 | (1 << 15)));
+		System.out.println((int) -31768);
 	}
 }
