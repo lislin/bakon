@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import io.netty.buffer.ByteBuf;
@@ -19,10 +19,13 @@ public class UDPTest {
 	static DatagramSocket serverSocket;
 	static DatagramSocket clientSocket;
 
-	@BeforeClass
-	public static void beforeClass() throws IOException {
-		serverSocket = new DatagramSocket(9876);
-		clientSocket = new DatagramSocket();
+	static {
+		try {
+			serverSocket = new DatagramSocket(9876);
+			clientSocket = new DatagramSocket();
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@AfterClass
@@ -44,8 +47,12 @@ public class UDPTest {
 	}
 
 	public static void doRequest(byte[] sendData) throws Exception {
+		doRequest("localhost", 9876, sendData);
+	}
+
+	public static void doRequest(String host, int port, byte[] sendData) throws Exception {
 		DatagramPacket sendPacket = new DatagramPacket(
-				sendData, sendData.length, InetAddress.getByName("localhost"), 9876);
+				sendData, sendData.length, InetAddress.getByName(host), port);
 		clientSocket.send(sendPacket);
 	}
 
@@ -70,7 +77,7 @@ public class UDPTest {
 		byte[] requestData = new byte[buf1.readableBytes()];
 		buf1.getBytes(0, requestData);
 
-		ByteBuf buf2 = new Response.AlarmSetting(false, 100).getBytes();
+		ByteBuf buf2 = new Response.AlarmSetting(AddressNO.A, false, 100).getBytes();
 		byte[] responseData = new byte[buf2.readableBytes()];
 		buf2.getBytes(0, responseData);
 
@@ -85,5 +92,93 @@ public class UDPTest {
 		Response.AlarmSetting response = (Response.AlarmSetting) Response.parse(buf4);
 		assertEquals(false, response.getError());
 		assertEquals(100, response.getThreshold());
+	}
+
+	public static void main(String[] args) throws Exception {
+		Response.AlarmSetting alarmSetting = (Response.AlarmSetting) sendAndReceive(new Request.AlarmSetting(AddressNO.A, 100));
+		System.out.println(alarmSetting);
+		System.out.println(alarmSetting.getAddressNO());
+		System.out.println(alarmSetting.getError());
+		System.out.println(alarmSetting.getThreshold());
+		System.out.println();
+
+		Response.AlarmQuery alarmQuery = (Response.AlarmQuery) sendAndReceive(new Request.AlarmQuery(AddressNO.A));
+		System.out.println(alarmQuery);
+		System.out.println(alarmQuery.getAddressNO());
+		System.out.println(alarmQuery.getError());
+		System.out.println(alarmQuery.getThreshold());
+		System.out.println();
+
+		Response.AlarmSwitch alarmSwitch = (Response.AlarmSwitch) sendAndReceive(new Request.AlarmSwitch(AddressNO.A, true));
+		System.out.println(alarmSwitch);
+		System.out.println(alarmSwitch.getAddressNO());
+		System.out.println(alarmSwitch.getError());
+		System.out.println(alarmSwitch.getEnabled());
+		System.out.println();
+
+		Response.Password password = (Response.Password) sendAndReceive(new Request.Password(AddressNO.A, 1, 2, 3));
+		System.out.println(password);
+		System.out.println(password.getAddressNO());
+		System.out.println(password.getError());
+		System.out.println(password.getNumber1());
+		System.out.println(password.getNumber2());
+		System.out.println(password.getNumber3());
+		System.out.println();
+
+		Response.GroundLevelQuery groundLevelQuery = (Response.GroundLevelQuery) sendAndReceive(new Request.GroundLevelQuery(AddressNO.A));
+		System.out.println(groundLevelQuery);
+		System.out.println(groundLevelQuery.getAddressNO());
+		System.out.println(groundLevelQuery.getError());
+		System.out.println(groundLevelQuery.getHighOrLow());
+		System.out.println();
+
+		Response.Voltage1Query voltage1Query = (Response.Voltage1Query) sendAndReceive(new Request.Voltage1Query(AddressNO.A));
+		System.out.println(voltage1Query);
+		System.out.println(voltage1Query.getAddressNO());
+		System.out.println(voltage1Query.getError());
+		System.out.println(voltage1Query.getClosed());
+		System.out.println(voltage1Query.getNegative());
+		System.out.println(voltage1Query.getValue());
+		System.out.println();
+
+		Response.Voltage2Query voltage2Query = (Response.Voltage2Query) sendAndReceive(new Request.Voltage2Query(AddressNO.A));
+		System.out.println(voltage2Query);
+		System.out.println(voltage2Query.getAddressNO());
+		System.out.println(voltage2Query.getError());
+		System.out.println(voltage2Query.getClosed());
+		System.out.println(voltage2Query.getNegative());
+		System.out.println(voltage2Query.getValue());
+		System.out.println();
+
+		Response.Voltage3Query voltage3Query = (Response.Voltage3Query) sendAndReceive(new Request.Voltage3Query(AddressNO.A));
+		System.out.println(voltage3Query);
+		System.out.println(voltage3Query.getAddressNO());
+		System.out.println(voltage3Query.getError());
+		System.out.println(voltage3Query.getClosed());
+		System.out.println(voltage3Query.getNegative());
+		System.out.println(voltage3Query.getValue());
+		System.out.println();
+	}
+
+	private static Response sendAndReceive(Request request) throws Exception {
+		ByteBuf buf1 = request.getBytes();
+		byte[] requestData = new byte[buf1.readableBytes()];
+		buf1.getBytes(0, requestData);
+		render(requestData);
+
+		doRequest("192.168.0.5", 10006, requestData);
+		byte[] responseData = doReceive();
+		render(responseData);
+
+		ByteBuf buf2 = ByteBufAllocator.DEFAULT.buffer().writeBytes(requestData);
+		return Response.parse(buf2);
+	}
+
+	private static void render(byte[] data) {
+		for (byte b : data) {
+			System.out.print("0x" + Integer.toHexString(Byte.toUnsignedInt(b)));
+			System.out.print(",");
+		}
+		System.out.println();
 	}
 }
