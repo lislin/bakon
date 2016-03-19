@@ -45,37 +45,37 @@ public abstract class Response {
 
 		switch (type) {
 		case 0x01:
-			return new AlarmSetting(addressNO, true, buf);
-		case 0x11:
 			return new AlarmSetting(addressNO, false, buf);
+		case 0x11:
+			return new AlarmSetting(addressNO, true, buf);
 		case 0x02:
-			return new AlarmSwitch(addressNO, true, buf);
-		case 0x12:
 			return new AlarmSwitch(addressNO, false, buf);
+		case 0x12:
+			return new AlarmSwitch(addressNO, true, buf);
 		case 0x03:
-			return new Password(addressNO, true, buf);
-		case 0x13:
 			return new Password(addressNO, false, buf);
+		case 0x13:
+			return new Password(addressNO, true, buf);
 		case 0x08:
-			return new GroundLevelQuery(addressNO, true, buf);
-		case 0x18:
 			return new GroundLevelQuery(addressNO, false, buf);
+		case 0x18:
+			return new GroundLevelQuery(addressNO, true, buf);
 		case 0x09:
-			return new AlarmQuery(addressNO, true, buf);
-		case 0x19:
 			return new AlarmQuery(addressNO, false, buf);
+		case 0x19:
+			return new AlarmQuery(addressNO, true, buf);
 		case 0x0a:
-			return new Voltage1Query(addressNO, true, buf);
-		case 0x1a:
 			return new Voltage1Query(addressNO, false, buf);
+		case 0x1a:
+			return new Voltage1Query(addressNO, true, buf);
 		case 0x0b:
-			return new Voltage2Query(addressNO, true, buf);
-		case 0x1b:
 			return new Voltage2Query(addressNO, false, buf);
+		case 0x1b:
+			return new Voltage2Query(addressNO, true, buf);
 		case 0x0c:
-			return new Voltage3Query(addressNO, true, buf);
-		case 0x1c:
 			return new Voltage3Query(addressNO, false, buf);
+		case 0x1c:
+			return new Voltage3Query(addressNO, true, buf);
 		default:
 			throw new BakonException("unknown type of request: " + type);
 		}
