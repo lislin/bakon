@@ -119,11 +119,11 @@ public abstract class Response {
 
 	protected int parseType() {
 		if (this instanceof AlarmSetting)
-			return this.getError() ? 0x01 : 0x11;
+			return this.getError() ? 0x11 : 0x01;
 		if (this instanceof AlarmSwitch)
-			return this.getError() ? 0x02 : 0x12;
+			return this.getError() ? 0x12 : 0x02;
 		if (this instanceof Password)
-			return this.getError() ? 0x03 : 0x13;
+			return this.getError() ? 0x13 : 0x03;
 
 		throw new BakonException("unknown type of request: " + this);
 	}
@@ -246,7 +246,7 @@ public abstract class Response {
 
 		@Override
 		protected int parseType() {
-			return this.getError() ? 0x08 : 0x18;
+			return this.getError() ? 0x18 : 0x08;
 		}
 
 		@Override
@@ -274,7 +274,7 @@ public abstract class Response {
 
 		@Override
 		protected int parseType() {
-			return this.getError() ? 0x09 : 0x19;
+			return this.getError() ? 0x19 : 0x09;
 		}
 
 		@Override
@@ -346,7 +346,7 @@ public abstract class Response {
 
 		@Override
 		protected int parseType() {
-			return this.getError() ? 0x0a : 0x1a;
+			return this.getError() ? 0x1a : 0x0a;
 		}
 	}
 
@@ -361,7 +361,7 @@ public abstract class Response {
 
 		@Override
 		protected int parseType() {
-			return this.getError() ? 0x0b : 0x1b;
+			return this.getError() ? 0x1b : 0x0b;
 		}
 	}
 
@@ -376,7 +376,7 @@ public abstract class Response {
 
 		@Override
 		protected int parseType() {
-			return this.getError() ? 0x0c : 0x1c;
+			return this.getError() ? 0x1c : 0x0c;
 		}
 	}
 }
