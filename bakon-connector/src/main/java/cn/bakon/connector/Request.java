@@ -60,7 +60,7 @@ public abstract class Request {
 	}
 
 	private ByteBuf renderCRC(ByteBuf buf) {
-		byte[] tmp = new byte[4];
+		byte[] tmp = new byte[5];
 		buf.getBytes(0, tmp);
 		CRC8 crc8 = new CRC8();
 		crc8.update(tmp);
