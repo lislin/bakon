@@ -3,7 +3,7 @@ package cn.bakon.connector;
 import java.util.zip.Checksum;
 
 public class CRC8 implements Checksum {
-	private static final int poly = 0x0D5;
+	private static final int poly = 0x31;
 	private int crc = 0;
 
 	@Override
