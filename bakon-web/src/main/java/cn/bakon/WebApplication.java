@@ -1,4 +1,4 @@
-package cn.bakon.web;
+package cn.bakon;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

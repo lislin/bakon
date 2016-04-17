@@ -1,4 +1,4 @@
-package cn.bakon.web;
+package cn.bakon;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,9 +9,10 @@ import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import cn.bakon.web.WebApplication;
+import cn.bakon.WebApplication;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -20,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 @SpringApplicationConfiguration(WebApplication.class)
 @WebIntegrationTest(randomPort = true)
 @DirtiesContext
+@ActiveProfiles("test")
 public class WebApplicationTest {
 	@Value("${local.server.port}")
 	private int port;
