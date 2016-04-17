@@ -33,6 +33,8 @@ public class RestApplicationTest {
 	public void testHome() throws Exception {
 		this.mvc.perform(get("/api"))
 				.andExpect(status().isOk())
-				.andExpect(content().string(containsString("equipments")));
+				.andExpect(content().string(containsString("equipments")))
+				.andExpect(content().string(containsString("records")))
+				.andExpect(content().string(containsString("status")));
 	}
 }

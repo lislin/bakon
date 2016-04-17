@@ -39,4 +39,9 @@ public class Equipment implements Serializable {
 	public String getCode() {
 		return this.code;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("%s,%s,%s", this.id, this.code, this.name);
+	}
 }
