@@ -73,11 +73,11 @@ public class UDPTest {
 
 	@Test
 	public void request_respone_test() throws Exception {
-		ByteBuf buf1 = new Request.AlarmSetting(AddressNO.A, 100).getBytes();
+		ByteBuf buf1 = new Request.AlarmSetting(FeatureType.A, 100).getBytes();
 		byte[] requestData = new byte[buf1.readableBytes()];
 		buf1.getBytes(0, requestData);
 
-		ByteBuf buf2 = new Response.AlarmSetting(AddressNO.A, false, 100).getBytes();
+		ByteBuf buf2 = new Response.AlarmSetting(FeatureType.A, false, 100).getBytes();
 		byte[] responseData = new byte[buf2.readableBytes()];
 		buf2.getBytes(0, responseData);
 
@@ -85,7 +85,7 @@ public class UDPTest {
 
 		ByteBuf buf3 = ByteBufAllocator.DEFAULT.buffer().writeBytes(doResponse(responseData));
 		Request.AlarmSetting request = (Request.AlarmSetting) Request.parse(buf3);
-		assertEquals(AddressNO.A, request.getAddressNO());
+		assertEquals(FeatureType.A, request.getFeatureType());
 		assertEquals(100, request.getThreshold());
 
 		ByteBuf buf4 = ByteBufAllocator.DEFAULT.buffer().writeBytes(doReceive());
@@ -95,64 +95,64 @@ public class UDPTest {
 	}
 
 	public static void main(String[] args) throws Exception {
-		Response.AlarmSetting alarmSetting = (Response.AlarmSetting) sendAndReceive(new Request.AlarmSetting(AddressNO.A, 100));
+		Response.AlarmSetting alarmSetting = (Response.AlarmSetting) sendAndReceive(new Request.AlarmSetting(FeatureType.A, 100));
 		System.out.println(alarmSetting);
-		System.out.println(alarmSetting.getAddressNO());
+		System.out.println(alarmSetting.getFeatureType());
 		System.out.println(alarmSetting.getError());
 		System.out.println(alarmSetting.getThreshold());
 		System.out.println();
 
-		Response.AlarmQuery alarmQuery = (Response.AlarmQuery) sendAndReceive(new Request.AlarmQuery(AddressNO.A));
+		Response.AlarmQuery alarmQuery = (Response.AlarmQuery) sendAndReceive(new Request.AlarmQuery(FeatureType.A));
 		System.out.println(alarmQuery);
-		System.out.println(alarmQuery.getAddressNO());
+		System.out.println(alarmQuery.getFeatureType());
 		System.out.println(alarmQuery.getError());
 		System.out.println(alarmQuery.getThreshold());
 		System.out.println();
 
-		Response.AlarmSwitch alarmSwitch = (Response.AlarmSwitch) sendAndReceive(new Request.AlarmSwitch(AddressNO.A, true));
+		Response.AlarmSwitch alarmSwitch = (Response.AlarmSwitch) sendAndReceive(new Request.AlarmSwitch(FeatureType.A, true));
 		System.out.println(alarmSwitch);
-		System.out.println(alarmSwitch.getAddressNO());
+		System.out.println(alarmSwitch.getFeatureType());
 		System.out.println(alarmSwitch.getError());
 		System.out.println(alarmSwitch.getEnabled());
 		System.out.println();
 
-		Response.Password password = (Response.Password) sendAndReceive(new Request.Password(AddressNO.A, 1, 2, 3));
+		Response.Password password = (Response.Password) sendAndReceive(new Request.Password(FeatureType.A, 1, 2, 3));
 		System.out.println(password);
-		System.out.println(password.getAddressNO());
+		System.out.println(password.getFeatureType());
 		System.out.println(password.getError());
 		System.out.println(password.getNumber1());
 		System.out.println(password.getNumber2());
 		System.out.println(password.getNumber3());
 		System.out.println();
 
-		Response.GroundLevelQuery groundLevelQuery = (Response.GroundLevelQuery) sendAndReceive(new Request.GroundLevelQuery(AddressNO.A));
+		Response.GroundLevelQuery groundLevelQuery = (Response.GroundLevelQuery) sendAndReceive(new Request.GroundLevelQuery(FeatureType.A));
 		System.out.println(groundLevelQuery);
-		System.out.println(groundLevelQuery.getAddressNO());
+		System.out.println(groundLevelQuery.getFeatureType());
 		System.out.println(groundLevelQuery.getError());
 		System.out.println(groundLevelQuery.getHighOrLow());
 		System.out.println();
 
-		Response.Voltage1Query voltage1Query = (Response.Voltage1Query) sendAndReceive(new Request.Voltage1Query(AddressNO.A));
+		Response.Voltage1Query voltage1Query = (Response.Voltage1Query) sendAndReceive(new Request.Voltage1Query(FeatureType.A));
 		System.out.println(voltage1Query);
-		System.out.println(voltage1Query.getAddressNO());
+		System.out.println(voltage1Query.getFeatureType());
 		System.out.println(voltage1Query.getError());
 		System.out.println(voltage1Query.getClosed());
 		System.out.println(voltage1Query.getNegative());
 		System.out.println(voltage1Query.getValue());
 		System.out.println();
 
-		Response.Voltage2Query voltage2Query = (Response.Voltage2Query) sendAndReceive(new Request.Voltage2Query(AddressNO.A));
+		Response.Voltage2Query voltage2Query = (Response.Voltage2Query) sendAndReceive(new Request.Voltage2Query(FeatureType.A));
 		System.out.println(voltage2Query);
-		System.out.println(voltage2Query.getAddressNO());
+		System.out.println(voltage2Query.getFeatureType());
 		System.out.println(voltage2Query.getError());
 		System.out.println(voltage2Query.getClosed());
 		System.out.println(voltage2Query.getNegative());
 		System.out.println(voltage2Query.getValue());
 		System.out.println();
 
-		Response.Voltage3Query voltage3Query = (Response.Voltage3Query) sendAndReceive(new Request.Voltage3Query(AddressNO.A));
+		Response.Voltage3Query voltage3Query = (Response.Voltage3Query) sendAndReceive(new Request.Voltage3Query(FeatureType.A));
 		System.out.println(voltage3Query);
-		System.out.println(voltage3Query.getAddressNO());
+		System.out.println(voltage3Query.getFeatureType());
 		System.out.println(voltage3Query.getError());
 		System.out.println(voltage3Query.getClosed());
 		System.out.println(voltage3Query.getNegative());

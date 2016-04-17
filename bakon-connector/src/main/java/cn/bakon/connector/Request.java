@@ -5,14 +5,14 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
 public abstract class Request {
-	private AddressNO addressNO;
+	private FeatureType featureType;
 
-	public AddressNO getAddressNO() {
-		return this.addressNO;
+	public FeatureType getFeatureType() {
+		return this.featureType;
 	}
 
-	protected Request(AddressNO addressNO) {
-		this.addressNO = addressNO;
+	protected Request(FeatureType featureType) {
+		this.featureType = featureType;
 	}
 
 	protected abstract ByteBuf renderData(ByteBuf buf);
@@ -22,7 +22,7 @@ public abstract class Request {
 				this.renderData(
 						ByteBufAllocator.DEFAULT.buffer()
 								.writeByte(0xCC)
-								.writeByte(this.parseAddressNO())
+								.writeByte(this.parseFeatureType())
 								.writeByte(this.parseType())))
 				.writeByte(0x33);
 	}
@@ -31,27 +31,27 @@ public abstract class Request {
 		if (buf.readByte() != (byte) 0xCC)
 			throw new BakonException("illegal request: " + buf);
 
-		AddressNO addressNO = parseAddressNO(buf.readByte());
+		FeatureType featureType = parseFeatureType(buf.readByte());
 
 		byte type = buf.readByte();
 
 		switch (type) {
 		case 0x01:
-			return new AlarmSetting(addressNO, buf);
+			return new AlarmSetting(featureType, buf);
 		case 0x02:
-			return new AlarmSwitch(addressNO, buf);
+			return new AlarmSwitch(featureType, buf);
 		case 0x03:
-			return new Password(addressNO, buf);
+			return new Password(featureType, buf);
 		case 0x08:
-			return new GroundLevelQuery(addressNO, buf);
+			return new GroundLevelQuery(featureType, buf);
 		case 0x09:
-			return new AlarmQuery(addressNO, buf);
+			return new AlarmQuery(featureType, buf);
 		case 0x0a:
-			return new Voltage1Query(addressNO, buf);
+			return new Voltage1Query(featureType, buf);
 		case 0x0b:
-			return new Voltage2Query(addressNO, buf);
+			return new Voltage2Query(featureType, buf);
 		case 0x0c:
-			return new Voltage3Query(addressNO, buf);
+			return new Voltage3Query(featureType, buf);
 		default:
 			throw new BakonException("unknown type of request: " + type);
 		}
@@ -67,8 +67,8 @@ public abstract class Request {
 		return buf.writeByte((int) crc8.getValue());
 	}
 
-	private byte parseAddressNO() {
-		switch (this.addressNO) {
+	private byte parseFeatureType() {
+		switch (this.featureType) {
 		case A:
 			return 0xa;
 		case B:
@@ -76,18 +76,18 @@ public abstract class Request {
 		case C:
 			return 0xc;
 		default:
-			throw new BakonException("unknown address: " + this.addressNO);
+			throw new BakonException("unknown address: " + this.featureType);
 		}
 	}
 
-	private static AddressNO parseAddressNO(byte value) {
+	private static FeatureType parseFeatureType(byte value) {
 		switch (value) {
 		case 0xa:
-			return AddressNO.A;
+			return FeatureType.A;
 		case 0xb:
-			return AddressNO.B;
+			return FeatureType.B;
 		case 0xc:
-			return AddressNO.C;
+			return FeatureType.C;
 		default:
 			throw new BakonException("unknown address: " + value);
 		}
@@ -111,14 +111,14 @@ public abstract class Request {
 			return this.threshold;
 		}
 
-		public AlarmSetting(AddressNO addressNO, int threshold) {
-			super(addressNO);
+		public AlarmSetting(FeatureType featureType, int threshold) {
+			super(featureType);
 			// TODO assert less than 500
 			this.threshold = threshold;
 		}
 
-		public AlarmSetting(AddressNO addressNO, ByteBuf buf) {
-			super(addressNO);
+		public AlarmSetting(FeatureType featureType, ByteBuf buf) {
+			super(featureType);
 			this.threshold = buf.readShort();
 		}
 
@@ -135,13 +135,13 @@ public abstract class Request {
 			return this.enabled;
 		}
 
-		public AlarmSwitch(AddressNO addressNO, boolean enabled) {
-			super(addressNO);
+		public AlarmSwitch(FeatureType featureType, boolean enabled) {
+			super(featureType);
 			this.enabled = enabled;
 		}
 
-		public AlarmSwitch(AddressNO addressNO, ByteBuf buf) {
-			super(addressNO);
+		public AlarmSwitch(FeatureType featureType, ByteBuf buf) {
+			super(featureType);
 			buf.readByte();
 			this.enabled = buf.readByte() == 0X01;
 		}
@@ -169,15 +169,15 @@ public abstract class Request {
 			return this.num3;
 		}
 
-		public Password(AddressNO addressNO, int num1, int num2, int num3) {
-			super(addressNO);
+		public Password(FeatureType featureType, int num1, int num2, int num3) {
+			super(featureType);
 			this.num1 = num1;
 			this.num2 = num2;
 			this.num3 = num3;
 		}
 
-		public Password(AddressNO addressNO, ByteBuf buf) {
-			super(addressNO);
+		public Password(FeatureType featureType, ByteBuf buf) {
+			super(featureType);
 			byte h = buf.readByte();
 			// int high = h >> 4;//TODO assert 0
 			this.num1 = h & 0x0F;
@@ -195,8 +195,8 @@ public abstract class Request {
 	public abstract static class Query extends Request {
 		private final static byte[] DATA = new byte[] { 0X00, 0X00 };
 
-		public Query(AddressNO addressNO) {
-			super(addressNO);
+		public Query(FeatureType featureType) {
+			super(featureType);
 		}
 
 		@Override
@@ -209,12 +209,12 @@ public abstract class Request {
 	}
 
 	public static class GroundLevelQuery extends Query {
-		public GroundLevelQuery(AddressNO addressNO) {
-			super(addressNO);
+		public GroundLevelQuery(FeatureType featureType) {
+			super(featureType);
 		}
 
-		public GroundLevelQuery(AddressNO addressNO, ByteBuf buf) {
-			super(addressNO);
+		public GroundLevelQuery(FeatureType featureType, ByteBuf buf) {
+			super(featureType);
 		}
 
 		@Override
@@ -224,12 +224,12 @@ public abstract class Request {
 	}
 
 	public static class AlarmQuery extends Query {
-		public AlarmQuery(AddressNO addressNO) {
-			super(addressNO);
+		public AlarmQuery(FeatureType featureType) {
+			super(featureType);
 		}
 
-		public AlarmQuery(AddressNO addressNO, ByteBuf buf) {
-			super(addressNO);
+		public AlarmQuery(FeatureType featureType, ByteBuf buf) {
+			super(featureType);
 		}
 
 		@Override
@@ -239,12 +239,12 @@ public abstract class Request {
 	}
 
 	public static class Voltage1Query extends Query {
-		public Voltage1Query(AddressNO addressNO) {
-			super(addressNO);
+		public Voltage1Query(FeatureType featureType) {
+			super(featureType);
 		}
 
-		public Voltage1Query(AddressNO addressNO, ByteBuf buf) {
-			super(addressNO);
+		public Voltage1Query(FeatureType featureType, ByteBuf buf) {
+			super(featureType);
 		}
 
 		@Override
@@ -254,12 +254,12 @@ public abstract class Request {
 	}
 
 	public static class Voltage2Query extends Query {
-		public Voltage2Query(AddressNO addressNO) {
-			super(addressNO);
+		public Voltage2Query(FeatureType featureType) {
+			super(featureType);
 		}
 
-		public Voltage2Query(AddressNO addressNO, ByteBuf buf) {
-			super(addressNO);
+		public Voltage2Query(FeatureType featureType, ByteBuf buf) {
+			super(featureType);
 		}
 
 		@Override
@@ -269,12 +269,12 @@ public abstract class Request {
 	}
 
 	public static class Voltage3Query extends Query {
-		public Voltage3Query(AddressNO addressNO) {
-			super(addressNO);
+		public Voltage3Query(FeatureType featureType) {
+			super(featureType);
 		}
 
-		public Voltage3Query(AddressNO addressNO, ByteBuf buf) {
-			super(addressNO);
+		public Voltage3Query(FeatureType featureType, ByteBuf buf) {
+			super(featureType);
 		}
 
 		@Override
