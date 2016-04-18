@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="joint.css" />
+        <script src="jquery.min.js"></script>
+        <script src="lodash.min.js"></script>
+        <script src="backbone-min.js"></script>
+        <script src="joint.js"></script>
+        <script src="joint.shapes.devs.js"></script>
+        <style type="text/css">
+        /* elements */
+        .devs text {
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .devs .body {
+            fill: #ffffff;
+            stroke: #31d0c6;
+            stroke-width: 6px;
+        }
+
+        .devs .label {
+            fill: #31d0c6;
+            font-size: 16px;
+        }
+
+        .devs .port-body {
+            stroke: #ffffff;
+            stroke-width: 3px;
+            fill: #7c68fc;
+        }
+
+        .devs .port-body:hover {
+            opacity: 1;
+            fill: #ff7e5d;
+        }
+
+        .devs .port-label {
+            fill: #7c68fc;
+        }
+
+        .devs.Atomic .body {
+            stroke: #feb663;
+        }
+
+        .devs.Atomic .label {
+            fill: #feb663;
+        }
+
+        /* links */
+
+        .link .connection {
+            stroke: #4B4F6A;
+            stroke-width: 4px;
+        }
+
+        .link .marker-arrowhead, .link .marker-vertex {
+            fill: #31D0C6;
+        }
+        .link .marker-arrowhead:hover {
+            fill: #F39C12;    
+        }
+
+        .link-tools .tool-remove circle {
+            fill: #fe854f;
+        }
+
+        /* highlighting */
+
+        .devs.highlighted-parent .body {
+            stroke: #fe854f;
+            transition: stroke 1s;
+        }
+
+        .devs.highlighted-parent .label {
+            fill: #fe854f;
+            transition: fill 1s;
+            text-decoration: underline;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+<div id="paper"></div>
+
+        <script type="text/javascript">
+var graph = new joint.dia.Graph();
+
+var paper = new joint.dia.Paper({
+    el: $('#paper'),
+    width: 1024,
+    height: 600,
+    gridSize: 1,
+    model: graph,
+    snapLinks: true,
+    linkPinning: false,
+    embeddingMode: true,
+    validateEmbedding: function(childView, parentView) {
+        return parentView.model instanceof joint.shapes.devs.Coupled;
+    },
+    validateConnection: function(sourceView, sourceMagnet, targetView, targetMagnet) {
+        return sourceMagnet != targetMagnet;
+    }
+});
+
+var connect = function(source, sourcePort, target, targetPort) {
+    var link = new joint.shapes.devs.Link({
+        source: { id: source.id, selector: source.getPortSelector(sourcePort) },
+        target: { id: target.id, selector: target.getPortSelector(targetPort) }
+    });
+    link.addTo(graph).reparent();
+};
+
+var cells = [];
+
+var c1 = cells[0] = new joint.shapes.devs.Coupled({
+    position: { x: 30, y: 250 },
+    size: { width: 200, height: 100 },
+});
+var c2 = cells[1] = new joint.shapes.devs.Coupled({
+    position: { x: 230, y: 250 },
+    size: { width: 200, height: 100 },
+});
+var c3 = cells[2] = new joint.shapes.devs.Coupled({
+    position: { x: 430, y: 200 },
+    size: { width: 100, height: 200 },
+    attrs: {'.label': { text: '波峰焊' }}
+});
+var c4 = cells[3] = new joint.shapes.devs.Coupled({
+    position: { x: 530, y: 250 },
+    size: { width: 200, height: 100 },
+});
+var c5 = cells[4] = new joint.shapes.devs.Coupled({
+    position: { x: 730, y: 250 },
+    size: { width: 200, height: 100 },
+});
+
+var a1 = cells[5] = new joint.shapes.devs.Atomic({
+    position: { x: 40, y: 150 },
+    attrs: {'.label': { text: '1W01' }}
+});
+
+var a2 = cells[6] = new joint.shapes.devs.Atomic({
+    position: { x: 140, y: 150 },
+    attrs: {'.label': { text: '1W02' }}
+});
+
+var a3 = cells[7] = new joint.shapes.devs.Atomic({
+    position: { x: 240, y: 150 },
+    attrs: {'.label': { text: '1W03' }}
+});
+
+var a4 = cells[8] = new joint.shapes.devs.Atomic({
+    position: { x: 340, y: 150 },
+    attrs: {'.label': { text: '1W04' }}
+});
+
+var a5 = cells[9] = new joint.shapes.devs.Atomic({
+    position: { x: 540, y: 150 },
+    attrs: {'.label': { text: '1W05' }}
+});
+
+var a6 = cells[10] = new joint.shapes.devs.Atomic({
+    position: { x: 640, y: 150 },
+    attrs: {'.label': { text: '1W06' }}
+});
+
+var a7 = cells[11] = new joint.shapes.devs.Atomic({
+    position: { x: 740, y: 150 },
+    attrs: {'.label': { text: '1W07' }}
+});
+
+var a8 = cells[12] = new joint.shapes.devs.Atomic({
+    position: { x: 840, y: 150 },
+    attrs: {'.label': { text: '1W08' }}
+});
+
+var a9 = cells[13] = new joint.shapes.devs.Atomic({
+    position: { x: 440, y: 100 },
+    attrs: {'.label': { text: '1E05' }}
+});
+
+var b1 = cells[14] = new joint.shapes.devs.Atomic({
+    position: { x: 40, y: 370 },
+    attrs: {'.label': { text: '1E01' }}
+});
+
+var b2 = cells[15] = new joint.shapes.devs.Atomic({
+    position: { x: 140, y: 370 },
+    attrs: {'.label': { text: '1E02' }}
+});
+
+var b3 = cells[16] = new joint.shapes.devs.Atomic({
+    position: { x: 240, y: 370 },
+    attrs: {'.label': { text: '1E03' }}
+});
+
+var b4 = cells[17] = new joint.shapes.devs.Atomic({
+    position: { x: 340, y: 370 },
+    attrs: {'.label': { text: '1E04' }}
+});
+
+var b5 = cells[18] = new joint.shapes.devs.Atomic({
+    position: { x: 540, y: 370 },
+    attrs: {'.label': { text: '1E05' }}
+});
+
+var b6 = cells[19] = new joint.shapes.devs.Atomic({
+    position: { x: 640, y: 370 },
+    attrs: {'.label': { text: '1E06' }}
+});
+
+var b7 = cells[20] = new joint.shapes.devs.Atomic({
+    position: { x: 740, y: 370 },
+    attrs: {'.label': { text: '1E07' }}
+});
+
+var b8 = cells[21] = new joint.shapes.devs.Atomic({
+    position: { x: 840, y: 370 },
+    attrs: {'.label': { text: '1E08' }}
+});
+
+var m1 = cells[22] = new joint.shapes.devs.Atomic({
+    position: { x: 90, y: 260 },
+    attrs: {'.label': { text: '1T01' }}
+});
+
+var m2 = cells[23] = new joint.shapes.devs.Atomic({
+    position: { x: 290, y: 260 },
+    attrs: {'.label': { text: '1T02' }}
+});
+
+var m3 = cells[24] = new joint.shapes.devs.Atomic({
+    position: { x: 590, y: 260 },
+    attrs: {'.label': { text: '1T03' }}
+});
+
+var m4 = cells[25] = new joint.shapes.devs.Atomic({
+    position: { x: 790, y: 260 },
+    attrs: {'.label': { text: '1T04' }}
+});
+
+graph.addCells(cells);
+
+c1.embed(a1);
+
+//connect(a2,'out',c1,'in');
+//connect(c1,'in',a1,'xy');
+//connect(a1,'x',c1,'out 1');
+//connect(a1,'y',c1,'out 2');
+//connect(c1,'out 1',a3,'a');
+//connect(c1,'out 2',a3,'b');
+
+/* rounded corners */
+
+//_.each([c1,a1,a2,a3], function(element) {
+//    element.attr({ '.body': { 'rx': 6, 'ry': 6 }});
+//});
+
+/* custom highlighting */
+
+var highlighter = V('circle', {
+    'r': 14,
+    'stroke': '#ff7e5d',
+    'stroke-width': '6px',
+    'fill': 'transparent',
+    'pointer-events': 'none'
+});
+
+paper.off('cell:highlight cell:unhighlight').on({
+    
+    'cell:highlight': function(cellView, el, opt) {
+
+        if (opt.embedding) {
+            V(el).addClass('highlighted-parent');
+        }
+
+        if (opt.connecting) {
+            var bbox = V(el).bbox(false, paper.viewport);
+            highlighter.translate(bbox.x + 10, bbox.y + 10, { absolute: true });
+            V(paper.viewport).append(highlighter);
+        }
+    },
+    
+    'cell:unhighlight': function(cellView, el, opt) {
+
+        if (opt.embedding) {
+            V(el).removeClass('highlighted-parent');
+        }
+
+        if (opt.connecting) {
+            highlighter.remove();
+        }
+    }
+});
+        </script>
+    </body>
+</html>
