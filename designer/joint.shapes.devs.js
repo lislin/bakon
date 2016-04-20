@@ -89,7 +89,7 @@ joint.shapes.devs.Coupled = joint.shapes.devs.Model.extend({
         size: { width: 200, height: 300 },
         attrs: {
             '.body': { fill: 'seaGreen' },
-            '.label': { text: 'Coupled' },
+            '.label': { text: '' },
             '.inPorts .port-body': { fill: 'PaleGreen' },
             '.outPorts .port-body': { fill: 'Tomato' }
         }

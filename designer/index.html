@@ -8,6 +8,7 @@
         <script src="backbone-min.js"></script>
         <script src="joint.js"></script>
         <script src="joint.shapes.devs.js"></script>
+        <script src="joint.shapes.features.js"></script>
         <style type="text/css">
         /* elements */
         .devs text {
@@ -82,16 +83,38 @@
         </style>
         <title></title>
     </head>
-    <body>
-<div id="paper"></div>
+    <body style="background-image:url(images/pages/bg.png);padding:0;margin:0;height:100%">
+        <div class="wrap" style="min-height:100%">
+            <div style="font-size:20px;text-align:center;margin-top:30px">
+                <img src="images/pages/logo.png" width="150px" />
+                智能静电防控管理系统
+            </div>
+            <div id="main" style="padding-bottom:110px;height:400px;overflow:scroll;">
+                <div id="paper"></div>
+            </div>
+        </div>
+        <div id="bottom" style="margin-top:-90px;width:100%;  text-align:center;font-size:13px">
+            <div style="height:30px">版权所有：深圳市白光电子科技有限公司</div>
+            <table style="width:100%;height:110px; background-image:url(images/pages/bt_back.png);background-repeat: repeat-x;">
+                <tr>
+                    <td><a href="."><img src="images/pages/sj.png" width="60px" /><div>设计模式</div></a></td>
+                    <td width="100px"><a href="."><img src="images/pages/sz.png" width="50px" /><div>系统设置</div></a></td>
+                    <td width="100px"><a href="."><img src="images/pages/yh.png" width="50px"/><div>用户管理</div></a></td>
+                    <td width="100px"><a href="."><img src="images/pages/jl.png" width="50px"/><div>记录查询</div></a></td>
+                    <td width="100px"><a href="."><img src="images/pages/sjk.png" width="50px"/><div>数据库管理</div></a></td>
+                    <td width="100px"><a href="."><img src="images/pages/bz.png" width="50px"/><div>帮 助</div></a></td>
+                    <td><a href="."><img src="images/pages/tc.png" width="50px" /><div>退 出</div></a></td>
+                </tr>
+            </table>
+        </div>
 
         <script type="text/javascript">
 var graph = new joint.dia.Graph();
 
 var paper = new joint.dia.Paper({
     el: $('#paper'),
-    width: 1024,
-    height: 600,
+    width: 2024,
+    height: 900,
     gridSize: 1,
     model: graph,
     snapLinks: true,
@@ -104,14 +127,6 @@ var paper = new joint.dia.Paper({
         return sourceMagnet != targetMagnet;
     }
 });
-
-var connect = function(source, sourcePort, target, targetPort) {
-    var link = new joint.shapes.devs.Link({
-        source: { id: source.id, selector: source.getPortSelector(sourcePort) },
-        target: { id: target.id, selector: target.getPortSelector(targetPort) }
-    });
-    link.addTo(graph).reparent();
-};
 
 var cells = [];
 
@@ -137,114 +152,115 @@ var c5 = cells[4] = new joint.shapes.devs.Coupled({
     size: { width: 200, height: 100 },
 });
 
-var a1 = cells[5] = new joint.shapes.devs.Atomic({
-    position: { x: 40, y: 150 },
+var a1 = cells[5] = new joint.shapes.feature.W({
+    position: { x: 40, y: 180 },
     attrs: {'.label': { text: '1W01' }}
 });
 
-var a2 = cells[6] = new joint.shapes.devs.Atomic({
-    position: { x: 140, y: 150 },
+var a2 = cells[6] = new joint.shapes.feature.W({
+    position: { x: 140, y: 180 },
     attrs: {'.label': { text: '1W02' }}
 });
 
-var a3 = cells[7] = new joint.shapes.devs.Atomic({
-    position: { x: 240, y: 150 },
+var a3 = cells[7] = new joint.shapes.feature.W({
+    position: { x: 240, y: 180 },
     attrs: {'.label': { text: '1W03' }}
 });
 
-var a4 = cells[8] = new joint.shapes.devs.Atomic({
-    position: { x: 340, y: 150 },
+var a4 = cells[8] = new joint.shapes.feature.W({
+    position: { x: 340, y: 180 },
     attrs: {'.label': { text: '1W04' }}
 });
 
-var a5 = cells[9] = new joint.shapes.devs.Atomic({
-    position: { x: 540, y: 150 },
+var a5 = cells[9] = new joint.shapes.feature.W({
+    position: { x: 540, y: 180 },
     attrs: {'.label': { text: '1W05' }}
 });
 
-var a6 = cells[10] = new joint.shapes.devs.Atomic({
-    position: { x: 640, y: 150 },
+var a6 = cells[10] = new joint.shapes.feature.W({
+    position: { x: 640, y: 180 },
     attrs: {'.label': { text: '1W06' }}
 });
 
-var a7 = cells[11] = new joint.shapes.devs.Atomic({
-    position: { x: 740, y: 150 },
+var a7 = cells[11] = new joint.shapes.feature.W({
+    position: { x: 740, y: 180 },
     attrs: {'.label': { text: '1W07' }}
 });
 
-var a8 = cells[12] = new joint.shapes.devs.Atomic({
-    position: { x: 840, y: 150 },
+var a8 = cells[12] = new joint.shapes.feature.W({
+    position: { x: 840, y: 180 },
     attrs: {'.label': { text: '1W08' }}
 });
 
-var a9 = cells[13] = new joint.shapes.devs.Atomic({
-    position: { x: 440, y: 100 },
+var a9 = cells[13] = new joint.shapes.feature.E({
+    position: { x: 450, y: 130 },
     attrs: {'.label': { text: '1E05' }}
 });
 
-var b1 = cells[14] = new joint.shapes.devs.Atomic({
+var b1 = cells[14] = new joint.shapes.feature.E({
     position: { x: 40, y: 370 },
     attrs: {'.label': { text: '1E01' }}
 });
 
-var b2 = cells[15] = new joint.shapes.devs.Atomic({
+var b2 = cells[15] = new joint.shapes.feature.E({
     position: { x: 140, y: 370 },
     attrs: {'.label': { text: '1E02' }}
 });
 
-var b3 = cells[16] = new joint.shapes.devs.Atomic({
+var b3 = cells[16] = new joint.shapes.feature.E({
     position: { x: 240, y: 370 },
     attrs: {'.label': { text: '1E03' }}
 });
 
-var b4 = cells[17] = new joint.shapes.devs.Atomic({
+var b4 = cells[17] = new joint.shapes.feature.E({
     position: { x: 340, y: 370 },
     attrs: {'.label': { text: '1E04' }}
 });
 
-var b5 = cells[18] = new joint.shapes.devs.Atomic({
+var b5 = cells[18] = new joint.shapes.feature.E({
     position: { x: 540, y: 370 },
     attrs: {'.label': { text: '1E05' }}
 });
 
-var b6 = cells[19] = new joint.shapes.devs.Atomic({
+var b6 = cells[19] = new joint.shapes.feature.E({
     position: { x: 640, y: 370 },
     attrs: {'.label': { text: '1E06' }}
 });
 
-var b7 = cells[20] = new joint.shapes.devs.Atomic({
+var b7 = cells[20] = new joint.shapes.feature.E({
     position: { x: 740, y: 370 },
     attrs: {'.label': { text: '1E07' }}
 });
 
-var b8 = cells[21] = new joint.shapes.devs.Atomic({
+var b8 = cells[21] = new joint.shapes.feature.E({
     position: { x: 840, y: 370 },
     attrs: {'.label': { text: '1E08' }}
 });
 
-var m1 = cells[22] = new joint.shapes.devs.Atomic({
-    position: { x: 90, y: 260 },
+var m1 = cells[22] = new joint.shapes.feature.T({
+    position: { x: 90, y: 280 },
     attrs: {'.label': { text: '1T01' }}
 });
 
-var m2 = cells[23] = new joint.shapes.devs.Atomic({
-    position: { x: 290, y: 260 },
+var m2 = cells[23] = new joint.shapes.feature.T({
+    position: { x: 290, y: 280 },
     attrs: {'.label': { text: '1T02' }}
 });
 
-var m3 = cells[24] = new joint.shapes.devs.Atomic({
-    position: { x: 590, y: 260 },
+var m3 = cells[24] = new joint.shapes.feature.T({
+    position: { x: 590, y: 280 },
     attrs: {'.label': { text: '1T03' }}
 });
 
-var m4 = cells[25] = new joint.shapes.devs.Atomic({
-    position: { x: 790, y: 260 },
+var m4 = cells[25] = new joint.shapes.feature.T({
+    position: { x: 790, y: 280 },
     attrs: {'.label': { text: '1T04' }}
 });
 
 graph.addCells(cells);
 
-c1.embed(a1);
+
+//c1.embed(a1);
 
 //connect(a2,'out',c1,'in');
 //connect(c1,'in',a1,'xy');
