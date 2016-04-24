@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="joint.css" />
+        <script src="jquery.min.js"></script>
+        <script src="lodash.min.js"></script>
+        <script src="backbone-min.js"></script>
+        <script src="joint.js"></script>
+        <script src="joint.shapes.devs.js"></script>
+        <script src="joint.shapes.features.js"></script>
+        <style type="text/css">
+        /* elements */
+        .devs text {
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .devs .body {
+            fill: #ffffff;
+            stroke: #31d0c6;
+            stroke-width: 6px;
+        }
+
+        .devs .label {
+            fill: #31d0c6;
+            font-size: 16px;
+        }
+
+        .devs .port-body {
+            stroke: #ffffff;
+            stroke-width: 3px;
+            fill: #7c68fc;
+        }
+
+        .devs .port-body:hover {
+            opacity: 1;
+            fill: #ff7e5d;
+        }
+
+        .devs .port-label {
+            fill: #7c68fc;
+        }
+
+        .devs.Atomic .body {
+            stroke: #feb663;
+        }
+
+        .devs.Atomic .label {
+            fill: #feb663;
+        }
+
+        /* links */
+
+        .link .connection {
+            stroke: #4B4F6A;
+            stroke-width: 4px;
+        }
+
+        .link .marker-arrowhead, .link .marker-vertex {
+            fill: #31D0C6;
+        }
+        .link .marker-arrowhead:hover {
+            fill: #F39C12;    
+        }
+
+        .link-tools .tool-remove circle {
+            fill: #fe854f;
+        }
+
+        /* highlighting */
+
+        .devs.highlighted-parent .body {
+            stroke: #fe854f;
+            transition: stroke 1s;
+        }
+
+        .devs.highlighted-parent .label {
+            fill: #fe854f;
+            transition: fill 1s;
+            text-decoration: underline;
+        }
+
+        .feature{
+            cursor: pointer;
+        }
+        span.feature{
+            display: inline-block;
+            font-size: 10px;
+            margin-left: 5px
+        }
+        </style>
+        <title></title>
+    </head>
+    <body style="background-image:url(images/pages/bg.png);padding:0;margin:0;height:100%; font-family:arial">
+        <div class="wrap" style="min-height:100%">
+            <div id="main" style="padding-bottom:110px;height:400px;overflow:scroll;">
+                <div id="paper"></div>
+            </div>
+        </div>
+        <div id="bottom" style="width:100%;text-align:center;font-size:13px">
+            <div style="height:30px">版权所有：深圳市白光电子科技有限公司</div>
+            
+            <div style="width:900px;margin:auto">
+                <div class="feature" style="float:left; border-style: solid; border-width: 4px; border-color:#31d0c6; background-color:#fff;width:50px;height:50px" title="增加拉线" onclick="addBlock();"></div>
+                <div style="float:left;margin-left:5px">
+                    <span class="feature" title="设备接地(E)" onclick="addFeature('E')">
+                        <img src="images/features/E.png" width="55px"/>
+                        <br/>
+                        <span>设备接地(E)</span>
+                    </span>
+                    <span class="feature" title="腕带接地(W)" onclick="addFeature('W')">
+                        <img src="images/features/W.png" width="55px"/>
+                        <br/>
+                        <span>腕带接地(W)</span>
+                    </span>
+                    <span class="feature" title="台垫接地(T)" onclick="addFeature('T')">
+                        <img src="images/features/T.png" width="55px"/>
+                        <br/>
+                        <span>台垫接地(T)</span>
+                    </span>
+
+                    <span class="feature" title="离子风机-1(F)">
+                        <img src="images/features/fj1.png" width="55px"/>
+                        <br/>
+                        <span>离子风机-1(F)</span>
+                    </span>
+                    <span class="feature" title="离子风机-2(F)">
+                        <img src="images/features/fj2.png" width="55px"/>
+                        <br/>
+                        <span>离子风机-2(F)</span>
+                    </span>
+                    <span class="feature" title="离子风机-3(F)">
+                        <img src="images/features/fj3.png" width="55px"/>
+                        <br/>
+                        <span>离子风机-3(F)</span>
+                    </span>
+
+                    <span class="feature" title="温湿度(C)">
+                        <img src="images/features/ws.png" width="55px"/>
+                        <br/>
+                        <span>温湿度(C)</span>
+                    </span>
+
+                    <span class="feature" title="吸顶离子棒(A)">
+                        <img src="images/features/xd.png" width="55px"/>
+                        <br/>
+                        <span>吸顶离子棒(A)</span>
+                    </span>
+
+                    <span class="feature" title="离子风棒(B)">
+                        <img src="images/features/fb.png" width="55px"/>
+                        <br/>
+                        <span>离子风棒(B)</span>
+                    </span>
+
+                    <span class="feature" title="残留电荷(D)">
+                        <img src="images/features/dh.png" width="55px"/>
+                        <br/>
+                        <span>残留电荷(D)</span>
+                    </span>
+                </div>
+                <div style="float:left;margin-left:20px">
+                    <a href="#">保存</a>
+                    <br/>
+                    <br/>
+                    <a href="#">返回</a>
+                </div>
+                <div style="clear:both">
+            </div>
+        </div>
+
+        <div style="position:absolute;right:50px;top:30px; text-align:left; line-height:20px;border-style: solid; border-width: 1px; border-color:#000; background-color:#F2F2F2;padding:10px">
+            <div>
+                <div>
+                    功能类型：<br/>
+                    <select style="width:80px">
+                        <option>设备接地</option>
+                        <option>腕带接地</option>
+                        <option>台垫接地</option>
+                    </select>
+                </div>
+                <div>
+                    位置信息：<br/>
+                    <input style="width:70px" />
+                </div>
+                <div>
+                    机器IP：<br/>
+                    <input style="width:70px" />
+                </div>
+                <div>
+                    机器端口：<br/>
+                    <input style="width:70px" />
+                </div>
+                <div>
+                    设定标准：<br/>
+                    <input style="width:70px" />
+                </div>
+            </div>
+        </div>
+
+        <div style="position:absolute;right:50px;top:330px; text-align:left; line-height:20px;border-style: solid; border-width: 1px; border-color:#000; background-color:#F2F2F2;padding:10px">
+            <div>
+                <div>
+                    线框文本描述：<br/>
+                    <input style="width:200px" />
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+var graph = new joint.dia.Graph();
+
+var paper = new joint.dia.Paper({
+    el: $('#paper'),
+    width: 2024,
+    height: 900,
+    gridSize: 1,
+    model: graph,
+    snapLinks: true,
+    linkPinning: false,
+    embeddingMode: true,
+    validateEmbedding: function(childView, parentView) {
+        return parentView.model instanceof joint.shapes.devs.Coupled;
+    },
+    validateConnection: function(sourceView, sourceMagnet, targetView, targetMagnet) {
+        return sourceMagnet != targetMagnet;
+    }
+});
+
+var cells = [];
+
+function addBlock() {
+    graph.addCells([new joint.shapes.devs.Coupled({
+        position: { x: 30, y: 250 },
+        size: { width: 200, height: 100 },
+        inPorts: ['in'],
+        outPorts: ['out 1','out 2']
+    })]);
+}
+
+var i=0;
+function addFeature(t) {
+    if(t == 'E')
+        graph.addCells([new joint.shapes.feature.E(
+                {
+                    position: { x: 100, y: 100 },
+                    attrs: {'.label': { text: '1' + t + (i++) }}
+                }
+            )
+        ]);
+    if(t == 'W')
+        graph.addCells([new joint.shapes.feature.W(
+                {
+                    position: { x: 150, y: 100 },
+                    attrs: {'.label': { text: '1' + t + (i++) }}
+                }
+            )
+        ]);
+    if(t == 'T')
+        graph.addCells([new joint.shapes.feature.T(
+                {
+                    position: { x: 200, y: 100 },
+                    attrs: {'.label': { text: '1' + t + (i++) }}
+                }
+            )
+        ]);
+}
+
+/* custom highlighting */
+
+var highlighter = V('circle', {
+    'r': 14,
+    'stroke': '#ff7e5d',
+    'stroke-width': '6px',
+    'fill': 'transparent',
+    'pointer-events': 'none'
+});
+
+paper.off('cell:highlight cell:unhighlight').on({
+    
+    'cell:highlight': function(cellView, el, opt) {
+
+        if (opt.embedding) {
+            V(el).addClass('highlighted-parent');
+        }
+
+        if (opt.connecting) {
+            var bbox = V(el).bbox(false, paper.viewport);
+            highlighter.translate(bbox.x + 10, bbox.y + 10, { absolute: true });
+            V(paper.viewport).append(highlighter);
+        }
+    },
+    
+    'cell:unhighlight': function(cellView, el, opt) {
+
+        if (opt.embedding) {
+            V(el).removeClass('highlighted-parent');
+        }
+
+        if (opt.connecting) {
+            highlighter.remove();
+        }
+    }
+});
+        </script>
+    </body>
+</html>

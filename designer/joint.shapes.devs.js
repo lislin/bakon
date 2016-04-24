@@ -12,7 +12,7 @@ joint.shapes.devs = {};
 
 joint.shapes.devs.Model = joint.shapes.basic.Generic.extend(_.extend({}, joint.shapes.basic.PortsModelInterface, {
 
-    markup: '<g class="rotatable"><g class="scalable"><rect class="body"/></g><text class="label"/><g class="inPorts"/><g class="outPorts"/></g>',
+    markup: '<g class="rotatable"><g class="scalable"><rect class="body"/></g><text class="label"/><span class="draggable">xx</span><g class="inPorts"/><g class="outPorts"/></g>',
     portMarkup: '<g class="port port<%= id %>"><circle class="port-body"/><text class="port-label"/></g>',
 
     defaults: joint.util.deepSupplement({
@@ -39,7 +39,7 @@ joint.shapes.devs.Model = joint.shapes.basic.Generic.extend(_.extend({}, joint.s
             },
             '.label': { text: 'Model', 'ref-x': .5, 'ref-y': 10, ref: '.body', 'text-anchor': 'middle', fill: '#000000' },
             '.inPorts .port-label': { x:-15, dy: 4, 'text-anchor': 'end', fill: '#000000' },
-            '.outPorts .port-label':{ x: 15, dy: 4, fill: '#000000' }
+            '.outPorts .port-label':{ x: 15, dy: 40, fill: '#000000' }
         }
 
     }, joint.shapes.basic.Generic.prototype.defaults),
