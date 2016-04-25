@@ -234,10 +234,11 @@ function addBlock() {
     graph.addCells([new joint.shapes.devs.Coupled({
         position: { x: 30, y: 250 },
         size: { width: 200, height: 100 },
-        inPorts: ['in'],
-        outPorts: ['out 1','out 2']
+        //inPorts: ['1', '2', '3','4']
     })]);
 }
+
+addBlock();
 
 var i=0;
 function addFeature(t) {
@@ -301,8 +302,68 @@ paper.off('cell:highlight cell:unhighlight').on({
         if (opt.connecting) {
             highlighter.remove();
         }
-    }
+    },
 });
+
+
+paper.on('all', function(en, cellView) {
+        console.log(cellView);
+        console.log(en);
+    }
+);
+
+var $cell;
+paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
+        console.log(cellView);
+        console.log(evt);
+        console.log(x);
+        console.log(y);
+
+        var $el = $('#tools').show();
+        $el.width(cellView.model.attributes.size.width);
+        $el.height(cellView.model.attributes.size.height);
+        $el.css('left', cellView.model.attributes.position.x);
+        $el.css('top', cellView.model.attributes.position.y);
+
+        $cell = cellView.model;
+        console.log(cellView.model.attributes.size.height);
+    }
+);
+
+function drag(ev){
+    console.log(ev.offsetX + '_' + ev.offsetY);
+    var $el = $('#tools');
+    //$el.css('left', ev.x);
+    //$el.css('top', ev.y);
+    var w = $el.width();
+    var h = $el.height();
+
+    w = w - ev.offsetX;
+    h = h - ev.offsetY;
+    if(w < 20)
+        w = 20
+    if(h < 20)
+        h = 20;
+
+    $el.width(w);
+    $el.height(h);
+
+    $cell.resize(w, h);
+    $el.hide();
+    $el.css('left', cellView.model.attributes.position.x);
+    $el.css('top', cellView.model.attributes.position.y);
+}
+
+
         </script>
+
+        <div id="tools" style="position:absolute;left:100px;top:100px;width:100px;height:100px;border-style:solid;border-width:1px;z-index:1">
+            <div draggable="true" ondragend="drag(event)" style="border-style:solid;border-width:1px;width:10px;height:10px;position:absolute;left:0;top:0;"></div>
+            <!--<div draggable="true" style="border-style:solid;border-width:1px;width:10px;height:10px;position:absolute;left:0;bottom:0"></div>
+            <div draggable="true" ondragend="drag(event)" style="border-style:solid;border-width:1px;width:10px;height:10px;position:absolute;right:0;top:0"></div>
+            <div draggable="true" ondragend="drag(event)" style="border-style:solid;border-width:1px;width:10px;height:10px;position:absolute;right:0;bottom:0"></div>-->
+        </div>
+
+
     </body>
 </html>
