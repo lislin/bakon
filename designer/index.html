@@ -118,13 +118,13 @@
             </div>
             <div style="background-image:url(images/pages/time.png);width:290px;height:75px;position:absolute;right:30px; top:20px">
                 <div style="float:left;font-size:40px;margin-left:15px;margin-top:15px">
-                    <span>12</span>
-                    <span style="margin-left:7px">00</span>
+                    <span id="clock_hour"></span>
+                    <span id="clock_minute" style="margin-left:7px"></span>
                 </div>
                 <div style="float:left; font-size:17px; text-align:center;margin-left:25px;margin-top:15px">
-                    <span>星期三</span>
+                    <span id="clock_weekday"></span>
                     <br />
-                    <span>2016年01月01日</span>
+                    <span id="clock_date"></span>
                 </div>
                 <div style="clear:both"></div>
             </div>
@@ -171,22 +171,22 @@
                 <div style="float:left;margin-left:10px;">
                     <div>
                         <span>起始日期：</span>
-                        <input />
+                        <input value="2016-03-06"/>
                         <span>截止日期：</span>
-                        <input />
+                        <input value="2016-06-06"/>
                     </div>
                     <div style="border-style: solid none none none; border-width: 1px; border-color:gray;margin:5px"></div>
                     <div>
-                        <span>功能类型:</span>
+                        <span>功能类型：</span>
                         <select style="width:80px">
                             <option>设备接地</option>
                             <option>腕带接地</option>
                             <option>台垫接地</option>
                         </select>
-                        <span>筛选状态:</span>
+                        <span>筛选状态：</span>
                         <select style="width:60px">
-                            <option>正常</option>
                             <option>异常</option>
+                            <option>正常</option>
                         </select>
                         <span>位置信息：</span>
                         <input style="width:30px" />
@@ -201,37 +201,23 @@
                 <div style="clear:both"></div>
             </div>
             <div style="margin-top:20px;margin-left:10px;height:300px;overflow:scroll">
-                <table class="list" border="0" style="width:97%;  text-aligin:center">
-                    <tr>
-                        <th>日期</th>
-                        <th>时间</th>
-                        <th>持续时长</th>
-                        <th>功能类型</th>
-                        <th>位置信息</th>
-                        <th>机器IP</th>
-                        <th>机器端口</th>
-                        <th>工作状态</th>
-                        <th>设定标准</th>
-                        <th>记录值</th>
-                    </tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
-                    <tr><td>2016-03-06</td><td>12:12:11</td><td>10:15</td><td>残留电压</td><td>W03</td><td>192.168.1.4</td><td>2</td><td>异常</td><td>+-80v</td><td>+80v</td></tr>
+                <table id="records" class="list" border="0" style="width:97%;  text-aligin:center">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>时间</th>
+                            <th>持续时长</th>
+                            <th>功能类型</th>
+                            <th>位置信息</th>
+                            <th>机器IP</th>
+                            <th>机器端口</th>
+                            <th>工作状态</th>
+                            <th>设定标准</th>
+                            <th>记录值</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
                 </table>
             </div>
             <div style="height:10px"></div>
@@ -387,7 +373,7 @@ var m4 = cells[25] = new joint.shapes.feature.T({
     attrs: {'.label': { text: '1T04' }}
 });
 
-graph.addCells(cells);
+//graph.addCells(cells);
 
 
 //console.log(JSON.stringify(graph));
@@ -441,6 +427,45 @@ paper.off('cell:highlight cell:unhighlight').on({
         if (opt.connecting) {
             highlighter.remove();
         }
+    }
+});
+
+load();
+
+function load() {
+    graph.fromJSON(JSON.parse(localStorage.getItem("graph")));
+}
+
+function clock() {
+    var date = new Date();
+    $('#clock_hour').text(("0" + date.getHours()).slice(-2));
+    $('#clock_minute').text(("0" + date.getMinutes()).slice(-2));
+    $('#clock_weekday').text(date.toLocaleDateString('zh-cn', { weekday: "long" }));
+    $('#clock_date').text(date.toLocaleDateString('zh-cn', { year: "numeric", month: "short", day: "numeric" }));
+}
+
+$(function(){
+    clock();
+    setInterval(clock, 10000);
+
+    var records = [
+        { 'date': '2016-03-06', 'time': '12:12:11', 'duration': '10:15', 'type': '残留电压', 'position': 'W03', 'host': '192.168.1.4', 'port': '2', 'status': '异常', 'norm': '+-80v', 'value': '+80v'}
+    ];
+    for (var i = 0; i < records.length; i++) {
+        var r = records[i];
+        $('#records tbody').append([
+            '<tr>',
+            '<td>' + r.date + '</td>',
+            '<td>' + r.time + '</td>',
+            '<td>' + r.duration + '</td>',
+            '<td>' + r.type + '</td>',
+            '<td>' + r.position + '</td>',
+            '<td>' + r.host + '</td>',
+            '<td>' + r.port + '</td>',
+            '<td>' + r.status + '</td>',
+            '<td>' + r.norm + '</td>',
+            '<td>' + r.value + '</td>',
+            '</tr>'].join(''));
     }
 });
         </script>

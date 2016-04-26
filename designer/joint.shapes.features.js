@@ -14,7 +14,7 @@ joint.shapes.feature.W = joint.dia.Element.extend({
     markup: '<g class="rotatable"><text class="label"/><image/></g>',
 
     defaults: joint.util.deepSupplement({
-        type: 'feature',
+        type: 'feature.W',
         size: { width: 50, height: 50 },
         attrs: {
             image: {
@@ -27,7 +27,8 @@ joint.shapes.feature.W = joint.dia.Element.extend({
                 'font-family': 'Courier New', 'font-size': 14,
                 'text-anchor': 'end',
             }
-        }
+        },
+        setting: { type: 'W', position: '', host: '', port: '1' }
     }, joint.dia.Element.prototype.defaults)
 });
 
@@ -35,7 +36,7 @@ joint.shapes.feature.E = joint.dia.Element.extend({
     markup: '<g class="rotatable"><text class="label"/><image/></g>',
 
     defaults: joint.util.deepSupplement({
-        type: 'feature',
+        type: 'feature.E',
         size: { width: 50, height: 50 },
         attrs: {
             image: {
@@ -48,7 +49,8 @@ joint.shapes.feature.E = joint.dia.Element.extend({
                 'font-family': 'Courier New', 'font-size': 14,
                 'text-anchor': 'end',
             }
-        }
+        },
+        setting: { type: 'E', position: '', host: '', port: '1' }
     }, joint.dia.Element.prototype.defaults)
 });
 
@@ -56,7 +58,7 @@ joint.shapes.feature.T = joint.dia.Element.extend({
     markup: '<g class="rotatable"><text class="label"/><image/></g>',
 
     defaults: joint.util.deepSupplement({
-        type: 'feature',
+        type: 'feature.T',
         size: { width: 50, height: 50 },
         attrs: {
             image: {
@@ -69,6 +71,7 @@ joint.shapes.feature.T = joint.dia.Element.extend({
                 'font-family': 'Courier New', 'font-size': 14,
                 'text-anchor': 'end',
             }
-        }
+        },
+        setting: { type: 'T', position: '', host: '', port: '1' }
     }, joint.dia.Element.prototype.defaults)
 });
