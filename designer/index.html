@@ -154,7 +154,7 @@
             </table>
         </div>
 
-        <div id="dialog_records" style="width:650px; position:absolute;z-index:999;left:30%; top:100px; font-size:12px; border-style: solid; border-width: 1px; border-color:gray; background-color:#F2F2F2" >
+        <div id="dialog_records" style="display:none;width:650px; position:absolute;z-index:999;left:30%; top:100px; font-size:12px; border-style: solid; border-width: 1px; border-color:gray; background-color:#F2F2F2" >
             <div style="background-image:url(images/pages/bg_dialog.png);height:23px;color:#fff">
                 <div style="float:left;margin-left:10px;">
                     <img src="images/pages/jl_s.png" width="20px" />
@@ -178,10 +178,10 @@
                     <div style="border-style: solid none none none; border-width: 1px; border-color:gray;margin:5px"></div>
                     <div>
                         <span>功能类型：</span>
-                        <select style="width:80px">
-                            <option>设备接地</option>
-                            <option>腕带接地</option>
-                            <option>台垫接地</option>
+                        <select id="dialog_records_type" style="width:80px">
+                            <option value="E">设备接地</option>
+                            <option value="W">腕带接地</option>
+                            <option value="T">台垫接地</option>
                         </select>
                         <span>筛选状态：</span>
                         <select style="width:60px">
@@ -189,9 +189,9 @@
                             <option>正常</option>
                         </select>
                         <span>位置信息：</span>
-                        <input style="width:30px" />
+                        <input id="dialog_records_position" style="width:30px" />
                         <span>IP：</span>
-                        <input style="width:70px" />
+                        <input id="dialog_records_host" style="width:70px" />
                     </div>
                 </div>
                 <div style="float:left;margin-left:10px;margin-top:10px">
@@ -228,8 +228,8 @@ var graph = new joint.dia.Graph();
 
 var paper = new joint.dia.Paper({
     el: $('#paper'),
-    width: 2024,
-    height: 900,
+    width: $(window).width(),
+    height: $(window).height(),
     gridSize: 1,
     model: graph,
     snapLinks: true,
@@ -430,7 +430,20 @@ paper.off('cell:highlight cell:unhighlight').on({
     }
 });
 
+paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
+    if(cellView.model instanceof joint.shapes.feature.E
+            || cellView.model instanceof joint.shapes.feature.W
+            || cellView.model instanceof joint.shapes.feature.T) {
+        $('#dialog_records').show();
+        $('#dialog_records_type option[value="' + cellView.model.attributes.setting.type + '"]').attr('selected', true);
+        $('#dialog_records_position').val(cellView.model.attributes.setting.position);
+        $('#dialog_records_host').val(cellView.model.attributes.setting.host);
+    }
+});
+
 load();
+
+paper.scaleContentToFit({padding:30});
 
 function load() {
     graph.fromJSON(JSON.parse(localStorage.getItem("graph")));
