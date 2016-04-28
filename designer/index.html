@@ -145,10 +145,10 @@
                 <tr>
                     <td><a href="design.html"><img src="images/pages/sj.png" width="60px" /><div>设计模式</div></a></td>
                     <td width="100px"><a href="javascript:$('#dialog_setting').show()"><img src="images/pages/sz.png" width="50px" /><div>系统设置</div></a></td>
-                    <td width="100px"><a href="#"><img src="images/pages/yh.png" width="50px"/><div>用户管理</div></a></td>
+                    <td width="100px"><a href="javascript:alert('暂不支持')"><img src="images/pages/yh.png" width="50px"/><div>用户管理</div></a></td>
                     <td width="100px"><a href="javascript:$('#dialog_records').show()"><img src="images/pages/jl.png" width="50px"/><div>记录查询</div></a></td>
-                    <td width="100px"><a href="#"><img src="images/pages/sjk.png" width="50px"/><div>数据库管理</div></a></td>
-                    <td width="100px"><a href="#"><img src="images/pages/bz.png" width="50px"/><div>帮 助</div></a></td>
+                    <td width="100px"><a href="javascript:alert('暂不支持')"><img src="images/pages/sjk.png" width="50px"/><div>数据库管理</div></a></td>
+                    <td width="100px"><a href="javascript:$('#dialog_help').show()"><img src="images/pages/bz.png" width="50px"/><div>帮 助</div></a></td>
                     <td><a href="#"><img src="images/pages/tc.png" width="50px" /><div>退 出</div></a></td>
                 </tr>
             </table>
@@ -254,6 +254,35 @@
                     <button>默认值</button>
                     <button>保存</button>
                 </div>
+            </div>
+        </div>
+
+        <div id="dialog_help" style="display:none;width:350px; position:absolute;z-index:999;left:30%; top:100px; font-size:12px; border-style: solid; border-width: 1px; border-color:gray; background-color:#F2F2F2" >
+            <div style="background-image:url(images/pages/bg_dialog.png);height:23px;color:#fff">
+                <div style="float:left;margin-left:10px;">
+                    <img src="images/pages/help.png" width="20px" />
+                </div>
+                <div style="float:left;margin-left:5px;margin-top:5px">
+                    <span>帮 助</span>
+                </div>
+                <div style="float:right;margin-right:10px;margin-top:5px;" onclick="javascript:$('#dialog_help').hide()">
+                    <span class="btn">关闭</span>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+            <div style="margin-top:10px;padding-left:20px;margin-bottom:20px">
+                <div style="padding:20px">
+                版权所有：
+                </div>
+                <div style="float:left;padding-top:30px;padding-right:10px">
+                    <img src="images/pages/Logo.png" width="100px" />
+                </div>
+                <div style="float:left;line-height:20px;border-style:none none none solid;border-width:1px; padding:10px">
+                    智能静电防控管理系统<br />
+                    深圳市白光电子科技有限公司<br />
+                    www.bakon.cn
+                </div>
+                <div style="clear:both"></div>
             </div>
         </div>
 
@@ -489,17 +518,22 @@ function clock() {
 
 function checkStatus() {
     var all = {};
+    var testWarn;
     var models = graph.getElements();
     for (var i = 0; i < models.length; i++) {
         var model = models[i];
-        if(model.attributes.setting)
+        if(model.attributes.setting) {
             all[model.id] = model.attributes.setting;
+
+            if(!testWarn)
+                testWarn = model.id;
+        }
         //TODO: request status
         console.log(model);
     };
 
     var results = {};
-    results["9ac5ced7-0446-4476-81fa-9bb7d298c5e4"] = true;
+    results[testWarn] = true;
     for (var id in all) {
         console.log(id);
         var model = graph.getCell(id);
