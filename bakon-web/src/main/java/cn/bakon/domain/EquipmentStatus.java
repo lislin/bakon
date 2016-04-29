@@ -1,43 +1,53 @@
 package cn.bakon.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
+// 设备当前状态
 @Entity
-public class EquipmentStatus implements Serializable {
+public class EquipmentStatus extends EquipmentStatusRecord {
 	private static final long serialVersionUID = 1L;
-	@Id
-	private int equipmentId;
+
+	// 是否是当前状态
 	@Column
-	private Date time;
+	private boolean current;
+	// 当前状态的持续时间、毫秒
 	@Column
-	private String value;
+	private int duration;
+	// 正常 异常 离线
+	@Column
+	private String status;
 
 	protected EquipmentStatus() {
 	}
 
-	public EquipmentStatus(int equipmentId) {
-		this.equipmentId = equipmentId;
+	public EquipmentStatus(
+			String position, String type, String host, int port,
+			Date time, String value, String threshold,
+			String status) {
+		super(position, type, host, port, time, value, threshold);
+		this.status = status;
 	}
 
-	public int getEquipmentId() {
-		return this.equipmentId;
+	public boolean getCurrent() {
+		return this.current;
 	}
 
-	public Date getTime() {
-		return this.time;
+	public void setCurrent(boolean current) {
+		this.current = current;
 	}
 
-	public String getValue() {
-		return this.value;
+	public int getDuration() {
+		return this.duration;
 	}
 
-	public void setValue(String value) {
-		this.time = new Date();
-		this.value = value;
+	public void addDuration(int millis) {
+		this.duration += millis;
+	}
+
+	public String getStatus() {
+		return this.status;
 	}
 }

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+// 设备定义
 @Entity
 public class Equipment implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -14,34 +15,42 @@ public class Equipment implements Serializable {
 	@Id
 	@GeneratedValue
 	private int id;
+	// 1W03
 	@Column
-	private String code;
+	private String position;
+	// E/W/T
 	@Column
-	private String name;
+	private String type;
+	// Device IP
 	@Column
-	private String description;
+	private String host;
+	// 1/2/3
+	@Column
+	private int port;
 
-	@Column
-	private String deviceHost;
-	@Column
-	private String featureType;
-	@Column
-	private String port;
-
-	public int getId() {
-		return this.id;
+	protected Equipment() {
 	}
 
-	public String getName() {
-		return this.name;
+	public Equipment(String position, String type, String host, int port) {
+		this.position = position;
+		this.type = type;
+		this.host = host;
+		this.port = port;
 	}
 
-	public String getCode() {
-		return this.code;
+	public String getPosition() {
+		return this.position;
 	}
 
-	@Override
-	public String toString() {
-		return String.format("%s,%s,%s", this.id, this.code, this.name);
+	public String getType() {
+		return this.type;
+	}
+
+	public String getHost() {
+		return this.host;
+	}
+
+	public int getPort() {
+		return this.port;
 	}
 }

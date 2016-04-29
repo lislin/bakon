@@ -29,16 +29,13 @@ public class EquipmentRepositoryTest {
 		assertThat(equipments.getTotalElements(), is(greaterThanOrEqualTo(4L)));
 		equipments.forEach(new Consumer<Equipment>() {
 			@Override
-			public void accept(Equipment t) {
-				System.out.println(t);
+			public void accept(Equipment e) {
+				System.out.println(String.format("%s|%s|%s|%s",
+						e.getPosition(), e.getType(), e.getHost(), e.getPort()));
 			}
 		});
-	}
 
-	@Test
-	public void findFirstByCode() {
-		Equipment equipment = this.repository.findFirstByCode("1024");
-		assertThat(equipment, notNullValue());
-		assertThat(equipment.getCode(), is(equalTo("1024")));
+		this.repository.deleteAll();
+		assertFalse(this.repository.findAll().iterator().hasNext());
 	}
 }

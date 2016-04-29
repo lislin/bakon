@@ -7,5 +7,6 @@ import cn.bakon.domain.Equipment;
 
 @RepositoryRestResource(collectionResourceRel = "equipments", path = "equipments")
 public interface EquipmentRepository extends PagingAndSortingRepository<Equipment, Integer> {
-	Equipment findFirstByCode(String code);
+	// 保存设计：deleteAll,save(list)
+	// 轮询状态：findAll
 }
