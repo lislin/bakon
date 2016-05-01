@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" type="text/css" href="joint/joint.css" />
+        <script src="joint/jquery.min.js"></script>
+        <script src="joint/lodash.min.js"></script>
+        <script src="joint/backbone-min.js"></script>
+        <script src="joint/joint.js"></script>
+        <script src="joint/joint.shapes.devs.js"></script>
+        <script src="joint/joint.shapes.features.js"></script>
+        <style type="text/css">
+        /* elements */
+        .devs text {
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .devs .body {
+            fill: #ffffff;
+            stroke: #31d0c6;
+            stroke-width: 6px;
+        }
+
+        .devs .label {
+            fill: #31d0c6;
+            font-size: 16px;
+        }
+
+        .devs .port-body {
+            stroke: #ffffff;
+            stroke-width: 3px;
+            fill: #7c68fc;
+        }
+
+        .devs .port-body:hover {
+            opacity: 1;
+            fill: #ff7e5d;
+        }
+
+        .devs .port-label {
+            fill: #7c68fc;
+        }
+
+        .devs.Atomic .body {
+            stroke: #feb663;
+        }
+
+        .devs.Atomic .label {
+            fill: #feb663;
+        }
+
+        /* links */
+
+        .link .connection {
+            stroke: #4B4F6A;
+            stroke-width: 4px;
+        }
+
+        .link .marker-arrowhead, .link .marker-vertex {
+            fill: #31D0C6;
+        }
+        .link .marker-arrowhead:hover {
+            fill: #F39C12;    
+        }
+
+        .link-tools .tool-remove circle {
+            fill: #fe854f;
+        }
+
+        /* highlighting */
+
+        .devs.highlighted-parent .body {
+            stroke: #fe854f;
+            transition: stroke 1s;
+        }
+
+        .devs.highlighted-parent .label {
+            fill: #fe854f;
+            transition: fill 1s;
+            text-decoration: underline;
+        }
+
+        table.list{
+            border-style: solid; 
+            border-right-style: none; 
+            border-bottom-style: none; 
+            border-width: 1px; 
+            border-color:gray;
+            border-collapse:collapse;
+            font-size: 12px
+        }
+        table.list th, table.list td {
+            border-style: solid;
+            border-left-style: none;
+            border-top-style: none;
+            border-width: 1px;
+            text-align: center;
+            padding: 4px;
+        }
+        table.list th {
+            background-color: #D5D5D5
+        }
+        button {
+            cursor:pointer;
+        }
+        .btn {
+            cursor:pointer;   
+        }
+        </style>
+        <title></title>
+    </head>
+    <body style="background-image:url(images/pages/bg.png);padding:0;margin:0;height:100%; font-family:arial">
+        <div class="wrap" style="min-height:100%">
+            <div style="font-size:20px;text-align:center;margin-top:30px">
+                <img src="images/pages/Logo.png" width="150px" />
+                <span>智能静电防控管理系统</span>
+            </div>
+            <div style="background-image:url(images/pages/time.png);width:290px;height:75px;position:absolute;right:30px; top:20px">
+                <div style="float:left;font-size:40px;margin-left:15px;margin-top:15px">
+                    <span id="clock_hour"></span>
+                    <span id="clock_minute" style="margin-left:7px"></span>
+                </div>
+                <div style="float:left; font-size:17px; text-align:center;margin-left:25px;margin-top:15px">
+                    <span id="clock_weekday"></span>
+                    <br />
+                    <span id="clock_date"></span>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+
+
+            <div id="main" style="padding-bottom:110px;height:400px;overflow:scroll;">
+                <div id="paper"></div>
+            </div>
+        </div>
+        <div id="bottom" style="margin-top:-90px;width:100%;  text-align:center;font-size:13px">
+            <div style="height:30px">版权所有：深圳市白光电子科技有限公司</div>
+            <table style="width:100%;height:110px; background-image:url(images/pages/bt_back.png);background-repeat: repeat-x;">
+                <tr>
+                    <td colspan="7">
+                        <img src="images/pages/back_1.png" style="margin-top:-5px" />
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="design.html"><img src="images/pages/sj.png" width="60px" /><div>设计模式</div></a></td>
+                    <td width="100px"><a href="javascript:$('#dialog_setting').show()"><img src="images/pages/sz.png" width="50px" /><div>系统设置</div></a></td>
+                    <td width="100px"><a href="javascript:alert('暂不支持')"><img src="images/pages/yh.png" width="50px"/><div>用户管理</div></a></td>
+                    <td width="100px"><a href="javascript:$('#dialog_records').show()"><img src="images/pages/jl.png" width="50px"/><div>记录查询</div></a></td>
+                    <td width="100px"><a href="javascript:alert('暂不支持')"><img src="images/pages/sjk.png" width="50px"/><div>数据库管理</div></a></td>
+                    <td width="100px"><a href="javascript:$('#dialog_help').show()"><img src="images/pages/bz.png" width="50px"/><div>帮 助</div></a></td>
+                    <td><a href="#"><img src="images/pages/tc.png" width="50px" /><div>退 出</div></a></td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="dialog_records" style="display:none;width:650px; position:absolute;z-index:999;left:30%; top:100px; font-size:12px; border-style: solid; border-width: 1px; border-color:gray; background-color:#F2F2F2" >
+            <div style="background-image:url(images/pages/bg_dialog.png);height:23px;color:#fff">
+                <div style="float:left;margin-left:10px;">
+                    <img src="images/pages/jl_s.png" width="20px" />
+                </div>
+                <div style="float:left;margin-left:5px;margin-top:5px">
+                    <span>记录查询</span>
+                </div>
+                <div style="float:right;margin-right:10px;margin-top:5px;" onclick="javascript:$('#dialog_records').hide()">
+                    <span class="btn">关闭</span>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+            <div style="margin-top:10px;">
+                <div style="float:left;margin-left:10px;">
+                    <div>
+                        <span>起始日期：</span>
+                        <input value="2016-03-06"/>
+                        <span>截止日期：</span>
+                        <input value="2016-06-06"/>
+                    </div>
+                    <div style="border-style: solid none none none; border-width: 1px; border-color:gray;margin:5px"></div>
+                    <div>
+                        <span>功能类型：</span>
+                        <select id="dialog_records_type" style="width:80px">
+                            <option value="E">设备接地</option>
+                            <option value="W">腕带接地</option>
+                            <option value="T">台垫接地</option>
+                        </select>
+                        <span>筛选状态：</span>
+                        <select style="width:60px">
+                            <option>异常</option>
+                            <option>正常</option>
+                        </select>
+                        <span>位置信息：</span>
+                        <input id="dialog_records_position" style="width:30px" />
+                        <span>IP：</span>
+                        <input id="dialog_records_host" style="width:70px" />
+                    </div>
+                </div>
+                <div style="float:left;margin-left:10px;margin-top:10px">
+                    <button style="background-image:url(images/pages/query.png);width:47px;height:34px;border:0"></button>
+                    <button style="background-image:url(images/pages/export.png);width:71px;height:34px;border:0"></button>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+            <div style="margin-top:20px;margin-left:10px;height:300px;overflow:scroll">
+                <table id="records" class="list" border="0" style="width:97%;  text-aligin:center">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>时间</th>
+                            <th>持续时长</th>
+                            <th>功能类型</th>
+                            <th>位置信息</th>
+                            <th>机器IP</th>
+                            <th>机器端口</th>
+                            <th>工作状态</th>
+                            <th>设定标准</th>
+                            <th>记录值</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div style="height:10px"></div>
+        </div>
+
+        <div id="dialog_setting" style="display:none;width:350px; position:absolute;z-index:999;left:30%; top:100px; font-size:12px; border-style: solid; border-width: 1px; border-color:gray; background-color:#F2F2F2" >
+            <div style="background-image:url(images/pages/bg_dialog.png);height:23px;color:#fff">
+                <div style="float:left;margin-left:10px;">
+                    <img src="images/pages/xt.png" width="20px" />
+                </div>
+                <div style="float:left;margin-left:5px;margin-top:5px">
+                    <span>系统设置</span>
+                </div>
+                <div style="float:right;margin-right:10px;margin-top:5px;" onclick="javascript:$('#dialog_setting').hide()">
+                    <span class="btn">关闭</span>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+            <div style="margin-top:10px;padding-left:20px;margin-bottom:20px">
+                扫描频率：<input value="200"/> MS
+                <div style="border-style: solid none none none; border-width: 1px; border-color:gray;margin:5px"></div>
+
+                事件记录：
+                <span><input type="checkbox"/> 离线</span>
+                <span><input type="checkbox"/> 正常</span>
+                <span><input type="checkbox"/> 异常</span>
+                <div style="border-style: solid none none none; border-width: 1px; border-color:gray;margin:5px"></div>
+
+                警报音：
+                <span><input type="checkbox"/> 开启</span>
+                <div style="border-style: solid none none none; border-width: 1px; border-color:gray;margin:5px"></div>
+
+                <div>
+                    <button>默认值</button>
+                    <button>保存</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dialog_help" style="display:none;width:350px; position:absolute;z-index:999;left:30%; top:100px; font-size:12px; border-style: solid; border-width: 1px; border-color:gray; background-color:#F2F2F2" >
+            <div style="background-image:url(images/pages/bg_dialog.png);height:23px;color:#fff">
+                <div style="float:left;margin-left:10px;">
+                    <img src="images/pages/help.png" width="20px" />
+                </div>
+                <div style="float:left;margin-left:5px;margin-top:5px">
+                    <span>帮 助</span>
+                </div>
+                <div style="float:right;margin-right:10px;margin-top:5px;" onclick="javascript:$('#dialog_help').hide()">
+                    <span class="btn">关闭</span>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+            <div style="margin-top:10px;padding-left:20px;margin-bottom:20px">
+                <div style="padding:20px">
+                版权所有：
+                </div>
+                <div style="float:left;padding-top:30px;padding-right:10px">
+                    <img src="images/pages/Logo.png" width="100px" />
+                </div>
+                <div style="float:left;line-height:20px;border-style:none none none solid;border-width:1px; padding:10px">
+                    智能静电防控管理系统<br />
+                    深圳市白光电子科技有限公司<br />
+                    www.bakon.cn
+                </div>
+                <div style="clear:both"></div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+var graph = new joint.dia.Graph();
+
+var paper = new joint.dia.Paper({
+    el: $('#paper'),
+    width: $(window).width(),
+    height: $(window).height(),
+    gridSize: 1,
+    model: graph,
+    snapLinks: true,
+    linkPinning: false,
+    embeddingMode: true,
+    interactive: false,
+    validateEmbedding: function(childView, parentView) {
+        return parentView.model instanceof joint.shapes.devs.Coupled;
+    },
+    validateConnection: function(sourceView, sourceMagnet, targetView, targetMagnet) {
+        return sourceMagnet != targetMagnet;
+    }
+});
+
+var cells = [];
+
+var c1 = cells[0] = new joint.shapes.devs.Coupled({
+    position: { x: 30, y: 250 },
+    size: { width: 200, height: 100 },
+});
+var c2 = cells[1] = new joint.shapes.devs.Coupled({
+    position: { x: 230, y: 250 },
+    size: { width: 200, height: 100 },
+});
+var c3 = cells[2] = new joint.shapes.devs.Coupled({
+    position: { x: 430, y: 200 },
+    size: { width: 100, height: 200 },
+    attrs: {'.label': { text: '波峰焊' }}
+});
+var c4 = cells[3] = new joint.shapes.devs.Coupled({
+    position: { x: 530, y: 250 },
+    size: { width: 200, height: 100 },
+});
+var c5 = cells[4] = new joint.shapes.devs.Coupled({
+    position: { x: 730, y: 250 },
+    size: { width: 200, height: 100 },
+});
+
+var a1 = cells[5] = new joint.shapes.feature.W({
+    position: { x: 40, y: 180 },
+    attrs: {'.label': { text: '1W01' }}
+});
+
+var a2 = cells[6] = new joint.shapes.feature.W({
+    position: { x: 140, y: 180 },
+    attrs: {'.label': { text: '1W02' }}
+});
+
+var a3 = cells[7] = new joint.shapes.feature.W({
+    position: { x: 240, y: 180 },
+    attrs: {'.label': { text: '1W03' }}
+});
+
+var a4 = cells[8] = new joint.shapes.feature.W({
+    position: { x: 340, y: 180 },
+    attrs: {'.label': { text: '1W04' }}
+});
+
+var a5 = cells[9] = new joint.shapes.feature.W({
+    position: { x: 540, y: 180 },
+    attrs: {'.label': { text: '1W05' }}
+});
+
+var a6 = cells[10] = new joint.shapes.feature.W({
+    position: { x: 640, y: 180 },
+    attrs: {'.label': { text: '1W06' }}
+});
+
+var a7 = cells[11] = new joint.shapes.feature.W({
+    position: { x: 740, y: 180 },
+    attrs: {'.label': { text: '1W07' }}
+});
+
+var a8 = cells[12] = new joint.shapes.feature.W({
+    position: { x: 840, y: 180 },
+    attrs: {'.label': { text: '1W08' }}
+});
+
+var a9 = cells[13] = new joint.shapes.feature.E({
+    position: { x: 450, y: 130 },
+    attrs: {'.label': { text: '1E05' }}
+});
+
+var b1 = cells[14] = new joint.shapes.feature.E({
+    position: { x: 40, y: 370 },
+    attrs: {'.label': { text: '1E01' }}
+});
+
+var b2 = cells[15] = new joint.shapes.feature.E({
+    position: { x: 140, y: 370 },
+    attrs: {'.label': { text: '1E02' }}
+});
+
+var b3 = cells[16] = new joint.shapes.feature.E({
+    position: { x: 240, y: 370 },
+    attrs: {'.label': { text: '1E03' }}
+});
+
+var b4 = cells[17] = new joint.shapes.feature.E({
+    position: { x: 340, y: 370 },
+    attrs: {'.label': { text: '1E04' }}
+});
+
+var b5 = cells[18] = new joint.shapes.feature.E({
+    position: { x: 540, y: 370 },
+    attrs: {'.label': { text: '1E05' }}
+});
+
+var b6 = cells[19] = new joint.shapes.feature.E({
+    position: { x: 640, y: 370 },
+    attrs: {'.label': { text: '1E06' }}
+});
+
+var b7 = cells[20] = new joint.shapes.feature.E({
+    position: { x: 740, y: 370 },
+    attrs: {'.label': { text: '1E07' }}
+});
+
+var b8 = cells[21] = new joint.shapes.feature.E({
+    position: { x: 840, y: 370 },
+    attrs: {'.label': { text: '1E08' }}
+});
+
+var m1 = cells[22] = new joint.shapes.feature.T({
+    position: { x: 90, y: 280 },
+    attrs: {'.label': { text: '1T01' }}
+});
+
+var m2 = cells[23] = new joint.shapes.feature.T({
+    position: { x: 290, y: 280 },
+    attrs: {'.label': { text: '1T02' }}
+});
+
+var m3 = cells[24] = new joint.shapes.feature.T({
+    position: { x: 590, y: 280 },
+    attrs: {'.label': { text: '1T03' }}
+});
+
+var m4 = cells[25] = new joint.shapes.feature.T({
+    position: { x: 790, y: 280 },
+    attrs: {'.label': { text: '1T04' }}
+});
+
+//graph.addCells(cells);
+
+
+//console.log(JSON.stringify(graph));
+
+//c1.embed(a1);
+
+//connect(a2,'out',c1,'in');
+//connect(c1,'in',a1,'xy');
+//connect(a1,'x',c1,'out 1');
+//connect(a1,'y',c1,'out 2');
+//connect(c1,'out 1',a3,'a');
+//connect(c1,'out 2',a3,'b');
+
+/* rounded corners */
+
+//_.each([c1,a1,a2,a3], function(element) {
+//    element.attr({ '.body': { 'rx': 6, 'ry': 6 }});
+//});
+
+/* custom highlighting */
+
+var highlighter = V('circle', {
+    'r': 14,
+    'stroke': '#ff7e5d',
+    'stroke-width': '6px',
+    'fill': 'transparent',
+    'pointer-events': 'none'
+});
+
+paper.off('cell:highlight cell:unhighlight').on({
+    
+    'cell:highlight': function(cellView, el, opt) {
+
+        if (opt.embedding) {
+            V(el).addClass('highlighted-parent');
+        }
+
+        if (opt.connecting) {
+            var bbox = V(el).bbox(false, paper.viewport);
+            highlighter.translate(bbox.x + 10, bbox.y + 10, { absolute: true });
+            V(paper.viewport).append(highlighter);
+        }
+    },
+    
+    'cell:unhighlight': function(cellView, el, opt) {
+
+        if (opt.embedding) {
+            V(el).removeClass('highlighted-parent');
+        }
+
+        if (opt.connecting) {
+            highlighter.remove();
+        }
+    }
+});
+
+paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
+    if(cellView.model instanceof joint.shapes.feature.E
+            || cellView.model instanceof joint.shapes.feature.W
+            || cellView.model instanceof joint.shapes.feature.T) {
+        $('#dialog_records').show();
+        $('#dialog_records_type option[value="' + cellView.model.attributes.setting.type + '"]').attr('selected', true);
+        $('#dialog_records_position').val(cellView.model.attributes.setting.position);
+        $('#dialog_records_host').val(cellView.model.attributes.setting.host);
+    }
+});
+
+function load() {
+    var cached = localStorage.getItem("graph");
+    if(cached != null)
+        graph.fromJSON(JSON.parse(cached));
+}
+
+function clock() {
+    var date = new Date();
+    $('#clock_hour').text(("0" + date.getHours()).slice(-2));
+    $('#clock_minute').text(("0" + date.getMinutes()).slice(-2));
+    $('#clock_weekday').text(date.toLocaleDateString('zh-cn', { weekday: "long" }));
+    $('#clock_date').text(date.toLocaleDateString('zh-cn', { year: "numeric", month: "short", day: "numeric" }));
+}
+
+function checkStatus() {
+    var all = {};
+    var testWarn;
+    var models = graph.getElements();
+    for (var i = 0; i < models.length; i++) {
+        var model = models[i];
+        if(model.attributes.setting) {
+            all[model.id] = model.attributes.setting;
+
+            if(!testWarn)
+                testWarn = model.id;
+        }
+        //TODO: request status
+        console.log(model);
+    };
+
+    var results = {};
+    results[testWarn] = true;
+    for (var id in all) {
+        console.log(id);
+        var model = graph.getCell(id);
+        console.log(model);
+        if(results[id]) {
+            alarm();
+            warning(model, true);
+        } else
+            warning(model, false);
+    };
+}
+
+function alarm() {
+}
+
+function warning(m, v) {
+    if(v) {
+        m.warningColor = 'black';
+        m.warning = setInterval(function() {
+            m.attr('.label/fill', m.warningColor = (m.warningColor == 'black' ? 'red' : 'black'));
+        }, 200);
+    } else
+        clearInterval(m.warning);
+
+}
+
+$(function(){
+    clock();
+    setInterval(clock, 10000);
+
+    load();
+    paper.scaleContentToFit({padding:30});
+
+    checkStatus();
+
+    var records = [
+        { 'date': '2016-03-06', 'time': '12:12:11', 'duration': '10:15', 'type': '残留电压', 'position': 'W03', 'host': '192.168.1.4', 'port': '2', 'status': '异常', 'norm': '+-80v', 'value': '+80v'}
+    ];
+    for (var i = 0; i < records.length; i++) {
+        var r = records[i];
+        $('#records tbody').append([
+            '<tr>',
+            '<td>' + r.date + '</td>',
+            '<td>' + r.time + '</td>',
+            '<td>' + r.duration + '</td>',
+            '<td>' + r.type + '</td>',
+            '<td>' + r.position + '</td>',
+            '<td>' + r.host + '</td>',
+            '<td>' + r.port + '</td>',
+            '<td>' + r.status + '</td>',
+            '<td>' + r.norm + '</td>',
+            '<td>' + r.value + '</td>',
+            '</tr>'].join(''));
+    }
+});
+        </script>
+    </body>
+</html>
