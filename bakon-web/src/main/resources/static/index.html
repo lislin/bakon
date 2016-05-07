@@ -236,11 +236,23 @@ var paper = new joint.dia.Paper({
     }
 });
 
+var all = {};
+
 function load() {
     $.getJSON( "/api/setting/1", function(data) {
         if(data != null && data.graph)
             graph.fromJSON(JSON.parse(data.graph));
+
+        var els = graph.getElements();
+        for (var i = 0; i < els.length; i++)
+            if(els[i].attributes.setting)
+                all[parseKey(els[i].attributes.setting)] = els[i];
+        console.log(all);
     });
+}
+
+function parseKey(s) {
+    return s.type + '_' + s.host + '_' + s.port;
 }
 
 function clock() {
@@ -252,33 +264,19 @@ function clock() {
 }
 
 function checkStatus() {
-    var all = {};
-    var testWarn;
-    var models = graph.getElements();
-    for (var i = 0; i < models.length; i++) {
-        var model = models[i];
-        if(model.attributes.setting) {
-            all[model.id] = model.attributes.setting;
-
-            if(!testWarn)
-                testWarn = model.id;
+    $.getJSON( "/api/getAllStatus", function(data) {
+        // FIXME mock
+        data = [
+            { type: 'W', host: '', port: 1, status: '异常' },
+        ];
+        for (var i = 0; i < data.length; i++) {
+            var s = data[i];
+            var m = all[parseKey(s)];
+            if(!m)
+                continue;
+            warning(m, s.status == '异常');
         }
-        //TODO: request status
-        console.log(model);
-    };
-
-    var results = {};
-    results[testWarn] = true;
-    for (var id in all) {
-        console.log(id);
-        var model = graph.getCell(id);
-        console.log(model);
-        if(results[id]) {
-            alarm();
-            warning(model, true);
-        } else
-            warning(model, false);
-    };
+    });
 }
 
 function alarm() {
@@ -313,7 +311,7 @@ $(function(){
     load();
     paper.scaleContentToFit({padding:30});
 
-    checkStatus();
+    setInterval(checkStatus, 1000);
 
     var records = [
         { 'date': '2016-03-06', 'time': '12:12:11', 'duration': '10:15', 'type': '残留电压', 'position': 'W03', 'host': '192.168.1.4', 'port': '2', 'status': '异常', 'norm': '+-80v', 'value': '+80v'}

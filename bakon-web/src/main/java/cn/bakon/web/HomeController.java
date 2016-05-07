@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import cn.bakon.domain.Equipment;
+import cn.bakon.domain.EquipmentStatus;
 
 @Controller
 public class HomeController {
 	@Autowired
 	private EquipmentRepository equipmentRepository;
+	@Autowired
+	private EquipmentStatusRepository statusRepository;
 
 	@RequestMapping("/monitor")
 	public ModelAndView monitor() {
@@ -28,5 +31,11 @@ public class HomeController {
 	public void updateEquipments(@RequestBody List<Equipment> equipments) {
 		this.equipmentRepository.deleteAll();
 		this.equipmentRepository.save(equipments);
+	}
+
+	@RequestMapping(value = "/api/getAllStatus", method = RequestMethod.GET)
+	@ResponseBody
+	public List<EquipmentStatus> getAllStatus() {
+		return this.statusRepository.findByCurrent(true);
 	}
 }
