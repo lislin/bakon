@@ -24,7 +24,7 @@ div.dialog {
     background-color:#F2F2F2
 }
 div.dialog div.bar {
-    background-image:url(images/pages/bg_dialog.png);height:23px;color:#fff
+    background-image:url(../images/pages/bg_dialog.png);height:23px;color:#fff
 }
 
 /* elements */

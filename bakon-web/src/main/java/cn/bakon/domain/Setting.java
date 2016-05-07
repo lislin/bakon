@@ -15,7 +15,7 @@ public class Setting implements Serializable {
 	@GeneratedValue
 	private int id;
 	// 监控图序列化结果
-	@Column
+	@Column(length=102400)
 	private String graph;
 	// 扫描频率
 	@Column

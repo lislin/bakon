@@ -160,8 +160,6 @@ var paper = new joint.dia.Paper({
     }
 });
 
-var cells = [];
-
 function addBlock() {
     graph.addCells([new joint.shapes.devs.Coupled({
         position: { x: 30, y: 250 },
@@ -169,8 +167,6 @@ function addBlock() {
         //inPorts: ['1', '2', '3','4']
     })]);
 }
-
-addBlock();
 
 var i=0;
 function addFeature(t) {
@@ -239,8 +235,6 @@ paper.off('cell:highlight cell:unhighlight').on({
 
 
 paper.on('all', function(en, cellView) {
-        console.log(cellView);
-        console.log(en);
         if(en == 'blank:pointerclick')
             $('.setting').hide();
     }
@@ -248,64 +242,58 @@ paper.on('all', function(en, cellView) {
 
 var $cell;
 paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
-        console.log(cellView);
-        console.log(evt);
-        console.log(x);
-        console.log(y);
+    if(cellView.model instanceof joint.shapes.devs.Coupled) {
+        $('.setting').hide();
+        $('#setting_block').show();
 
-        if(cellView.model instanceof joint.shapes.devs.Coupled) {
-            $('.setting').hide();
-            $('#setting_block').show();
+        $('#setting_block_label').val(cellView.model.attributes.attrs['.label'].text);
+        $('#setting_block_width').val(cellView.model.attributes.size.width);
+        $('#setting_block_height').val(cellView.model.attributes.size.height);
 
-            $('#setting_block_label').val(cellView.model.attributes.attrs['.label'].text);
-            $('#setting_block_width').val(cellView.model.attributes.size.width);
-            $('#setting_block_height').val(cellView.model.attributes.size.height);
+        $('#setting_block input').unbind().change(function() {
+            var w = $('#setting_block_width').val();
+            var h = $('#setting_block_height').val();
+            if(w < 50) w = 50;
+            if(w > 600) w = 600;
+            if(h < 50) h = 50;
+            if(h > 300) h = 300;
+            cellView.model.resize(w, h);
+            cellView.model.attr('.label/text', $('#setting_block_label').val());
+        });
 
-            $('#setting_block input').unbind().change(function() {
-                var w = $('#setting_block_width').val();
-                var h = $('#setting_block_height').val();
-                if(w < 50) w = 50;
-                if(w > 600) w = 600;
-                if(h < 50) h = 50;
-                if(h > 300) h = 300;
-                cellView.model.resize(w, h);
-                cellView.model.attr('.label/text', $('#setting_block_label').val());
-            });
+        // TODO: remove following
+        var $el = $('#tools').show();
+        $el.width(cellView.model.attributes.size.width);
+        $el.height(cellView.model.attributes.size.height);
+        $el.css('left', cellView.model.attributes.position.x);
+        $el.css('top', cellView.model.attributes.position.y);
 
-            // TODO: remove following
-            var $el = $('#tools').show();
-            $el.width(cellView.model.attributes.size.width);
-            $el.height(cellView.model.attributes.size.height);
-            $el.css('left', cellView.model.attributes.position.x);
-            $el.css('top', cellView.model.attributes.position.y);
-
-            $cell = cellView.model;
-            console.log(cellView.model.attributes.size.height);
-            return;
-        }
-
-        if(cellView.model instanceof joint.shapes.feature.E
-            || cellView.model instanceof joint.shapes.feature.W
-            || cellView.model instanceof joint.shapes.feature.T) {
-            $('.setting').hide();
-            $('#setting_feature').show();
-            $('#setting_feature_position').val(cellView.model.attributes.setting.position);
-            $('#setting_feature_host').val(cellView.model.attributes.setting.host);
-            $('#setting_feature_port').find('option[value="' + cellView.model.attributes.setting.port + '"]').attr("selected","true");
-
-            $('#setting_feature input,#setting_feature select').unbind().change(function() {
-                cellView.model.attributes.setting.position = $('#setting_feature_position').val();
-                cellView.model.attributes.setting.host = $('#setting_feature_host').val();
-                cellView.model.attributes.setting.port = $("#setting_feature_port").find("option:selected").text();
-                cellView.model.attr('.label/text', cellView.model.attributes.setting.type + cellView.model.attributes.setting.position);
-            });
-            return;
-        }
+        $cell = cellView.model;
+        console.log(cellView.model.attributes.size.height);
+        return;
     }
-);
+
+    if(cellView.model instanceof joint.shapes.feature.E
+        || cellView.model instanceof joint.shapes.feature.W
+        || cellView.model instanceof joint.shapes.feature.T) {
+        $('.setting').hide();
+        $('#setting_feature').show();
+        $('#setting_feature_position').val(cellView.model.attributes.setting.position);
+        $('#setting_feature_host').val(cellView.model.attributes.setting.host);
+        $('#setting_feature_port').find('option[value="' + cellView.model.attributes.setting.port + '"]').attr("selected","true");
+
+        $('#setting_feature input,#setting_feature select').unbind().change(function() {
+            cellView.model.attributes.setting.position = $('#setting_feature_position').val();
+            cellView.model.attributes.setting.host = $('#setting_feature_host').val();
+            cellView.model.attributes.setting.port = $("#setting_feature_port").find("option:selected").text();
+            cellView.model.attr('.label/text', cellView.model.attributes.setting.type + cellView.model.attributes.setting.position);
+        });
+        return;
+    }
+});
 
 function drag(ev){
-    console.log(ev.offsetX + '_' + ev.offsetY);
+    // console.log(ev.offsetX + '_' + ev.offsetY);
     var $el = $('#tools');
     //$el.css('left', ev.x);
     //$el.css('top', ev.y);
@@ -328,23 +316,49 @@ function drag(ev){
     $el.css('top', cellView.model.attributes.position.y);
 }
 
-
-load();
-
 function save() {
-    localStorage.setItem("graph", JSON.stringify(graph));
+    var els = graph.getElements();
+    var settings = [];
+    var j = 0;
+    for (var i = 0; i < els.length; i++) {
+        if(els[i].attributes['setting'])
+            settings[j++] = els[i].attributes['setting'];
+    }
+
+    $.ajax({
+        url: '/api/updateEquipments',
+        method: 'POST',
+        async: false,
+        contentType: 'application/json',
+        data: JSON.stringify(settings)
+    });
+
+    $.ajax({
+        url: '/api/setting/1',
+        contentType: 'application/json',
+        method: 'PUT',
+        data: JSON.stringify({ 'graph': JSON.stringify(graph) })
+    });
 }
 
 function load() {
-    var cached = localStorage.getItem("graph");
-    if(cached != null)
-        graph.fromJSON(JSON.parse(cached));
+    $.getJSON( "/api/setting/1", function(data) {
+        if(data != null && data.graph)
+            graph.fromJSON(JSON.parse(data.graph));
+    });
 }
 
 $(window).bind('beforeunload', function(){
-    return confirm('正在编辑，确认已经保存？');
+    // return confirm('正在编辑，确认已经保存？');
 });
 
+//$(document).ajaxSuccess(function(event, xhr, settings) { alert('操作成功'); });
+$(document).ajaxError(function(event, xhr, settings) { alert('发生异常：' + xhr.responseText); });
+
+
+$(function() {
+    load();
+});
         </script>
 
         <div id="tools" class="setting" style="display:none;position:absolute;left:100px;top:100px;width:100px;height:100px;border-style:solid;border-width:1px;z-index:1">

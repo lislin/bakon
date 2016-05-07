@@ -236,207 +236,11 @@ var paper = new joint.dia.Paper({
     }
 });
 
-var cells = [];
-
-var c1 = cells[0] = new joint.shapes.devs.Coupled({
-    position: { x: 30, y: 250 },
-    size: { width: 200, height: 100 },
-});
-var c2 = cells[1] = new joint.shapes.devs.Coupled({
-    position: { x: 230, y: 250 },
-    size: { width: 200, height: 100 },
-});
-var c3 = cells[2] = new joint.shapes.devs.Coupled({
-    position: { x: 430, y: 200 },
-    size: { width: 100, height: 200 },
-    attrs: {'.label': { text: '波峰焊' }}
-});
-var c4 = cells[3] = new joint.shapes.devs.Coupled({
-    position: { x: 530, y: 250 },
-    size: { width: 200, height: 100 },
-});
-var c5 = cells[4] = new joint.shapes.devs.Coupled({
-    position: { x: 730, y: 250 },
-    size: { width: 200, height: 100 },
-});
-
-var a1 = cells[5] = new joint.shapes.feature.W({
-    position: { x: 40, y: 180 },
-    attrs: {'.label': { text: '1W01' }}
-});
-
-var a2 = cells[6] = new joint.shapes.feature.W({
-    position: { x: 140, y: 180 },
-    attrs: {'.label': { text: '1W02' }}
-});
-
-var a3 = cells[7] = new joint.shapes.feature.W({
-    position: { x: 240, y: 180 },
-    attrs: {'.label': { text: '1W03' }}
-});
-
-var a4 = cells[8] = new joint.shapes.feature.W({
-    position: { x: 340, y: 180 },
-    attrs: {'.label': { text: '1W04' }}
-});
-
-var a5 = cells[9] = new joint.shapes.feature.W({
-    position: { x: 540, y: 180 },
-    attrs: {'.label': { text: '1W05' }}
-});
-
-var a6 = cells[10] = new joint.shapes.feature.W({
-    position: { x: 640, y: 180 },
-    attrs: {'.label': { text: '1W06' }}
-});
-
-var a7 = cells[11] = new joint.shapes.feature.W({
-    position: { x: 740, y: 180 },
-    attrs: {'.label': { text: '1W07' }}
-});
-
-var a8 = cells[12] = new joint.shapes.feature.W({
-    position: { x: 840, y: 180 },
-    attrs: {'.label': { text: '1W08' }}
-});
-
-var a9 = cells[13] = new joint.shapes.feature.E({
-    position: { x: 450, y: 130 },
-    attrs: {'.label': { text: '1E05' }}
-});
-
-var b1 = cells[14] = new joint.shapes.feature.E({
-    position: { x: 40, y: 370 },
-    attrs: {'.label': { text: '1E01' }}
-});
-
-var b2 = cells[15] = new joint.shapes.feature.E({
-    position: { x: 140, y: 370 },
-    attrs: {'.label': { text: '1E02' }}
-});
-
-var b3 = cells[16] = new joint.shapes.feature.E({
-    position: { x: 240, y: 370 },
-    attrs: {'.label': { text: '1E03' }}
-});
-
-var b4 = cells[17] = new joint.shapes.feature.E({
-    position: { x: 340, y: 370 },
-    attrs: {'.label': { text: '1E04' }}
-});
-
-var b5 = cells[18] = new joint.shapes.feature.E({
-    position: { x: 540, y: 370 },
-    attrs: {'.label': { text: '1E05' }}
-});
-
-var b6 = cells[19] = new joint.shapes.feature.E({
-    position: { x: 640, y: 370 },
-    attrs: {'.label': { text: '1E06' }}
-});
-
-var b7 = cells[20] = new joint.shapes.feature.E({
-    position: { x: 740, y: 370 },
-    attrs: {'.label': { text: '1E07' }}
-});
-
-var b8 = cells[21] = new joint.shapes.feature.E({
-    position: { x: 840, y: 370 },
-    attrs: {'.label': { text: '1E08' }}
-});
-
-var m1 = cells[22] = new joint.shapes.feature.T({
-    position: { x: 90, y: 280 },
-    attrs: {'.label': { text: '1T01' }}
-});
-
-var m2 = cells[23] = new joint.shapes.feature.T({
-    position: { x: 290, y: 280 },
-    attrs: {'.label': { text: '1T02' }}
-});
-
-var m3 = cells[24] = new joint.shapes.feature.T({
-    position: { x: 590, y: 280 },
-    attrs: {'.label': { text: '1T03' }}
-});
-
-var m4 = cells[25] = new joint.shapes.feature.T({
-    position: { x: 790, y: 280 },
-    attrs: {'.label': { text: '1T04' }}
-});
-
-//graph.addCells(cells);
-
-
-//console.log(JSON.stringify(graph));
-
-//c1.embed(a1);
-
-//connect(a2,'out',c1,'in');
-//connect(c1,'in',a1,'xy');
-//connect(a1,'x',c1,'out 1');
-//connect(a1,'y',c1,'out 2');
-//connect(c1,'out 1',a3,'a');
-//connect(c1,'out 2',a3,'b');
-
-/* rounded corners */
-
-//_.each([c1,a1,a2,a3], function(element) {
-//    element.attr({ '.body': { 'rx': 6, 'ry': 6 }});
-//});
-
-/* custom highlighting */
-
-var highlighter = V('circle', {
-    'r': 14,
-    'stroke': '#ff7e5d',
-    'stroke-width': '6px',
-    'fill': 'transparent',
-    'pointer-events': 'none'
-});
-
-paper.off('cell:highlight cell:unhighlight').on({
-    
-    'cell:highlight': function(cellView, el, opt) {
-
-        if (opt.embedding) {
-            V(el).addClass('highlighted-parent');
-        }
-
-        if (opt.connecting) {
-            var bbox = V(el).bbox(false, paper.viewport);
-            highlighter.translate(bbox.x + 10, bbox.y + 10, { absolute: true });
-            V(paper.viewport).append(highlighter);
-        }
-    },
-    
-    'cell:unhighlight': function(cellView, el, opt) {
-
-        if (opt.embedding) {
-            V(el).removeClass('highlighted-parent');
-        }
-
-        if (opt.connecting) {
-            highlighter.remove();
-        }
-    }
-});
-
-paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
-    if(cellView.model instanceof joint.shapes.feature.E
-            || cellView.model instanceof joint.shapes.feature.W
-            || cellView.model instanceof joint.shapes.feature.T) {
-        $('#dialog_records').show();
-        $('#dialog_records_type option[value="' + cellView.model.attributes.setting.type + '"]').attr('selected', true);
-        $('#dialog_records_position').val(cellView.model.attributes.setting.position);
-        $('#dialog_records_host').val(cellView.model.attributes.setting.host);
-    }
-});
-
 function load() {
-    var cached = localStorage.getItem("graph");
-    if(cached != null)
-        graph.fromJSON(JSON.parse(cached));
+    $.getJSON( "/api/setting/1", function(data) {
+        if(data != null && data.graph)
+            graph.fromJSON(JSON.parse(data.graph));
+    });
 }
 
 function clock() {
@@ -490,6 +294,17 @@ function warning(m, v) {
         clearInterval(m.warning);
 
 }
+
+paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
+    if(cellView.model instanceof joint.shapes.feature.E
+            || cellView.model instanceof joint.shapes.feature.W
+            || cellView.model instanceof joint.shapes.feature.T) {
+        $('#dialog_records').show();
+        $('#dialog_records_type option[value="' + cellView.model.attributes.setting.type + '"]').attr('selected', true);
+        $('#dialog_records_position').val(cellView.model.attributes.setting.position);
+        $('#dialog_records_host').val(cellView.model.attributes.setting.host);
+    }
+});
 
 $(function(){
     clock();
