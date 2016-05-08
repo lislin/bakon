@@ -73,7 +73,7 @@
                 </tr>
                 <tr>
                     <td><a href="design.html"><img src="images/pages/sj.png" width="60px" /><div>设计模式</div></a></td>
-                    <td width="100px"><a href="javascript:$('#dialog_setting').show()"><img src="images/pages/sz.png" width="50px" /><div>系统设置</div></a></td>
+                    <td width="100px"><a href="javascript:showSetting()"><img src="images/pages/sz.png" width="50px" /><div>系统设置</div></a></td>
                     <td width="100px"><a href="javascript:alert('暂不支持')"><img src="images/pages/yh.png" width="50px"/><div>用户管理</div></a></td>
                     <td width="100px"><a href="javascript:$('#dialog_records').show()"><img src="images/pages/jl.png" width="50px"/><div>记录查询</div></a></td>
                     <td width="100px"><a href="javascript:alert('暂不支持')"><img src="images/pages/sjk.png" width="50px"/><div>数据库管理</div></a></td>
@@ -85,18 +85,18 @@
 
         <div id="dialog_records" class="dialog">
             <div class="bar">
-                <div style="float:left;margin-left:10px;">
+                <div class="bar_img">
                     <img src="images/pages/jl_s.png" width="20px" />
                 </div>
-                <div style="float:left;margin-left:5px;margin-top:5px">
+                <div class="bar_txt">
                     <span>记录查询</span>
                 </div>
-                <div style="float:right;margin-right:10px;margin-top:5px;" onclick="javascript:$('#dialog_records').hide()">
+                <div class="bar_close" onclick="javascript:$(this).parent('.dialog').hide()">
                     <span class="btn">关闭</span>
                 </div>
                 <div style="clear:both"></div>
             </div>
-            <div style="margin-top:10px;">
+            <div class="dialog_body">
                 <div style="float:left;margin-left:10px;">
                     <div>
                         <span>起始日期：</span>
@@ -104,7 +104,7 @@
                         <span>截止日期：</span>
                         <input value="2016-06-06"/>
                     </div>
-                    <div style="border-style: solid none none none; border-width: 1px; border-color:gray;margin:5px"></div>
+                    <div class="line"></div>
                     <div>
                         <span>功能类型：</span>
                         <select id="dialog_records_type" style="width:80px">
@@ -154,52 +154,51 @@
 
         <div id="dialog_setting" class="dialog" style="width:350px;" >
             <div class="bar">
-                <div style="float:left;margin-left:10px;">
+                <div class="bar_img">
                     <img src="images/pages/xt.png" width="20px" />
                 </div>
-                <div style="float:left;margin-left:5px;margin-top:5px">
+                <div class="bar_txt">
                     <span>系统设置</span>
                 </div>
-                <div style="float:right;margin-right:10px;margin-top:5px;" onclick="javascript:$('#dialog_setting').hide()">
+                <div class="bar_close" onclick="javascript:$('#dialog_setting').hide()">
                     <span class="btn">关闭</span>
                 </div>
                 <div style="clear:both"></div>
             </div>
-            <div style="margin-top:10px;padding-left:20px;margin-bottom:20px">
-                扫描频率：<input value="200"/> MS
-                <div style="border-style: solid none none none; border-width: 1px; border-color:gray;margin:5px"></div>
+            <div class="dialog_body">
+                扫描频率：<input id="setting_frequency" value="200"/> MS
+                <div class="line"></div>
 
                 事件记录：
-                <span><input type="checkbox"/> 离线</span>
-                <span><input type="checkbox"/> 正常</span>
-                <span><input type="checkbox"/> 异常</span>
-                <div style="border-style: solid none none none; border-width: 1px; border-color:gray;margin:5px"></div>
+                <span><input name="recordStatus" value="离线" type="checkbox" /> 离线</span>
+                <span><input name="recordStatus" value="正常" type="checkbox" /> 正常</span>
+                <span><input name="recordStatus" value="异常" type="checkbox" /> 异常</span>
+                <div class="line"></div>
 
                 警报音：
                 <span><input type="checkbox"/> 开启</span>
-                <div style="border-style: solid none none none; border-width: 1px; border-color:gray;margin:5px"></div>
+                <div class="line"></div>
 
                 <div>
-                    <button>默认值</button>
-                    <button>保存</button>
+                    <button onclick="updateSetting()">保存</button>
                 </div>
             </div>
         </div>
 
         <div id="dialog_help" class="dialog" style="width:350px;" >
             <div class="bar">
-                <div style="float:left;margin-left:10px;">
+                <div class="bar_img">
                     <img src="images/pages/help.png" width="20px" />
                 </div>
-                <div style="float:left;margin-left:5px;margin-top:5px">
+                <div class="bar_txt">
                     <span>帮 助</span>
                 </div>
-                <div style="float:right;margin-right:10px;margin-top:5px;" onclick="javascript:$('#dialog_help').hide()">
+                <div class="bar_close" onclick="javascript:$('#dialog_help').hide()">
                     <span class="btn">关闭</span>
                 </div>
                 <div style="clear:both"></div>
             </div>
-            <div style="margin-top:10px;padding-left:20px;margin-bottom:20px">
+            <div class="dialog">
                 <div style="padding:20px">
                 版权所有：
                 </div>
@@ -237,11 +236,15 @@ var paper = new joint.dia.Paper({
 });
 
 var all = {};
+var setting;
 
 function load() {
     $.getJSON( "/api/setting/1", function(data) {
-        if(data != null && data.graph)
-            graph.fromJSON(JSON.parse(data.graph));
+        setting = data;
+        console.log(setting);
+
+        if(setting != null && setting.graph)
+            graph.fromJSON(JSON.parse(setting.graph));
 
         var els = graph.getElements();
         for (var i = 0; i < els.length; i++)
@@ -293,6 +296,33 @@ function warning(m, v) {
 
 }
 
+function showSetting() {
+    $('#dialog_setting').show();
+    $('#setting_frequency').val(setting.frequency);
+    $('input[name=recordStatus]').removeAttr('checked');
+    for (var i = 0; i < setting.recordStatus.length; i++) {
+        $('input[name=recordStatus][value="' + setting.recordStatus[i] + '"]').attr('checked', 'checked');
+    }
+}
+
+function updateSetting() {
+    var recordStatus = [];
+    $('input[name=recordStatus][checked]').each(function(i) {
+        recordStatus[i] = this.value;
+    });
+    setting.frequency = $('#setting_frequency').val();
+    setting.recordStatus = recordStatus;
+    $.ajax({
+        url: '/api/setting/1',
+        contentType: 'application/json',
+        method: 'PUT',
+        data: JSON.stringify(setting)
+    }).done(function() {
+        $('#dialog_setting').hide();
+        alert('保存成功');
+    });
+}
+
 paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
     if(cellView.model instanceof joint.shapes.feature.E
             || cellView.model instanceof joint.shapes.feature.W
@@ -303,6 +333,8 @@ paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
         $('#dialog_records_host').val(cellView.model.attributes.setting.host);
     }
 });
+
+$(document).ajaxError(function(event, xhr, settings) { alert('发生异常：' + xhr.responseText); });
 
 $(function(){
     clock();
@@ -332,6 +364,13 @@ $(function(){
             '<td>' + r.value + '</td>',
             '</tr>'].join(''));
     }
+
+    $('input[name=recordStatus]').click(function(e) {
+        if($(e.target).attr('checked'))
+            $(e.target).removeAttr('checked');
+        else
+            $(e.target).attr('checked', 'checked');
+    });
 });
         </script>
     </body>

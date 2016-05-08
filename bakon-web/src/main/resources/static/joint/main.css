@@ -26,6 +26,21 @@ div.dialog {
 div.dialog div.bar {
     background-image:url(../images/pages/bg_dialog.png);height:23px;color:#fff
 }
+div.dialog div.bar div.bar_img {
+    float:left;margin-left:10px;
+}
+div.dialog div.bar div.bar_txt {
+    float:left;margin-left:5px;margin-top:5px
+}
+div.dialog div.bar div.bar_close {
+    float:right;margin-right:10px;margin-top:5px;
+}
+div.dialog div.dialog_body {
+    margin-top:10px;padding-left:20px;margin-bottom:20px
+}
+div.dialog div.line {
+    border-style: solid none none none; border-width: 1px; border-color:gray;margin:5px
+}
 
 /* elements */
 .devs text {

@@ -1,8 +1,10 @@
 package cn.bakon.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,11 +17,13 @@ public class Setting implements Serializable {
 	@GeneratedValue
 	private int id;
 	// 监控图序列化结果
-	@Column(length=102400)
+	@Column(length = 102400)
 	private String graph;
 	// 扫描频率
 	@Column
 	private int frequency;
+	@ElementCollection
+	private List<String> recordStatus;
 
 	public String getGraph() {
 		return graph;
@@ -37,4 +41,11 @@ public class Setting implements Serializable {
 		this.frequency = frequency;
 	}
 
+	public List<String> getRecordStatus() {
+		return recordStatus;
+	}
+
+	public void setRecordStatus(List<String> recordStatus) {
+		this.recordStatus = recordStatus;
+	}
 }
