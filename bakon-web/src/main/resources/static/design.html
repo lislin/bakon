@@ -163,8 +163,7 @@ var paper = new joint.dia.Paper({
 function addBlock() {
     graph.addCells([new joint.shapes.devs.Coupled({
         position: { x: 30, y: 250 },
-        size: { width: 200, height: 100 },
-        //inPorts: ['1', '2', '3','4']
+        size: { width: 200, height: 100 }
     })]);
 }
 
@@ -174,7 +173,6 @@ function addFeature(t) {
         graph.addCells([new joint.shapes.feature.E(
                 {
                     position: { x: 100, y: 100 },
-                    attrs: {'.label': { text: '1' + t + (i++) }}
                 }
             )
         ]);
@@ -182,7 +180,7 @@ function addFeature(t) {
         graph.addCells([new joint.shapes.feature.W(
                 {
                     position: { x: 150, y: 100 },
-                    attrs: {'.label': { text: '1' + t + (i++) }}
+                    // attrs: {'.label': { text: '1' + t + (i++) }}
                 }
             )
         ]);
@@ -190,7 +188,6 @@ function addFeature(t) {
         graph.addCells([new joint.shapes.feature.T(
                 {
                     position: { x: 200, y: 100 },
-                    attrs: {'.label': { text: '1' + t + (i++) }}
                 }
             )
         ]);
