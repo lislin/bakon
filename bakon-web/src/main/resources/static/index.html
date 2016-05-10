@@ -91,7 +91,7 @@
                 <div class="bar_txt">
                     <span>记录查询</span>
                 </div>
-                <div class="bar_close" onclick="javascript:$(this).parent('.dialog').hide()">
+                <div class="bar_close" onclick="javascript:$('#dialog_records').hide()">
                     <span class="btn">关闭</span>
                 </div>
                 <div style="clear:both"></div>
@@ -100,9 +100,9 @@
                 <div style="float:left;margin-left:10px;">
                     <div>
                         <span>起始日期：</span>
-                        <input value="2016-03-06"/>
+                        <input id="dialog_records_begin" value="2016-03-06"/>
                         <span>截止日期：</span>
-                        <input value="2016-06-06"/>
+                        <input id="dialog_records_end" value="2016-06-06"/>
                     </div>
                     <div class="line"></div>
                     <div>
@@ -113,18 +113,17 @@
                             <option value="T">台垫接地</option>
                         </select>
                         <span>筛选状态：</span>
-                        <select style="width:60px">
-                            <option>异常</option>
-                            <option>正常</option>
+                        <select id="dialog_records_status" style="width:60px">
+                            <option value="异常">异常</option>
+                            <option value="离线">离线</option>
+                            <option value="正常">正常</option>
                         </select>
                         <span>位置信息：</span>
                         <input id="dialog_records_position" style="width:30px" />
-                        <span>IP：</span>
-                        <input id="dialog_records_host" style="width:70px" />
                     </div>
                 </div>
                 <div style="float:left;margin-left:10px;margin-top:10px">
-                    <button style="background-image:url(images/pages/query.png);width:47px;height:34px;border:0"></button>
+                    <button id="dialog_records_query" style="background-image:url(images/pages/query.png);width:47px;height:34px;border:0" onclick="queryStatus()"></button>
                     <button style="background-image:url(images/pages/export.png);width:71px;height:34px;border:0"></button>
                 </div>
                 <div style="clear:both"></div>
@@ -323,14 +322,49 @@ function updateSetting() {
     });
 }
 
+function queryStatus() {
+    $('#records tbody').empty();
+    var p = $('#dialog_records_position').val();
+    $.getJSON( '/api/status/search/'
+        + (p == '' ? 'findAll' : 'findAllByPosition') 
+        + '?begin=' + $('#dialog_records_begin').val() 
+        + '&end=' + $('#dialog_records_end').val()
+        + '&type=' + $('#dialog_records_type').val() 
+        + '&status=' + $('#dialog_records_status').val() 
+        + '&position=' + $('#dialog_records_position').val(), function(data) {
+            var records = data._embedded.status;
+            for (var i = 0; i < records.length; i++) {
+                var r = records[i];
+                var time = new Date(r.time)
+                
+                $('#records tbody').append([
+                    '<tr>',
+                    '<td>' + time.toLocaleDateString('zh-cn', { year: 'numeric', month: 'short', day: 'numeric' }) + '</td>',
+                    '<td>' + ('0' + time.getHours()).slice(-2) + ':' + ('0' + time.getMinutes()).slice(-2) + '</td>',
+                    '<td>' + r.duration + '</td>',
+                    '<td>' + r.type + '</td>',
+                    '<td>' + r.position + '</td>',
+                    '<td>' + r.host + '</td>',
+                    '<td>' + r.port + '</td>',
+                    '<td>' + r.status + '</td>',
+                    '<td>' + r.threshold + '</td>',
+                    '<td>' + r.value + '</td>',
+                    '</tr>'].join(''));
+            }
+    });
+}
+
 paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
     if(cellView.model instanceof joint.shapes.feature.E
             || cellView.model instanceof joint.shapes.feature.W
             || cellView.model instanceof joint.shapes.feature.T) {
         $('#dialog_records').show();
+        $('#dialog_records_begin').val(new Date().format("yyyy-MM-dd"));
+        $('#dialog_records_end').val(new Date().addDays(1).format("yyyy-MM-dd"));
         $('#dialog_records_type option[value="' + cellView.model.attributes.setting.type + '"]').attr('selected', true);
         $('#dialog_records_position').val(cellView.model.attributes.setting.position);
         $('#dialog_records_host').val(cellView.model.attributes.setting.host);
+        $('#dialog_records_query').click();
     }
 });
 
@@ -343,27 +377,7 @@ $(function(){
     load();
     paper.scaleContentToFit({padding:30});
 
-    setInterval(checkStatus, 1000);
-
-    var records = [
-        { 'date': '2016-03-06', 'time': '12:12:11', 'duration': '10:15', 'type': '残留电压', 'position': 'W03', 'host': '192.168.1.4', 'port': '2', 'status': '异常', 'norm': '+-80v', 'value': '+80v'}
-    ];
-    for (var i = 0; i < records.length; i++) {
-        var r = records[i];
-        $('#records tbody').append([
-            '<tr>',
-            '<td>' + r.date + '</td>',
-            '<td>' + r.time + '</td>',
-            '<td>' + r.duration + '</td>',
-            '<td>' + r.type + '</td>',
-            '<td>' + r.position + '</td>',
-            '<td>' + r.host + '</td>',
-            '<td>' + r.port + '</td>',
-            '<td>' + r.status + '</td>',
-            '<td>' + r.norm + '</td>',
-            '<td>' + r.value + '</td>',
-            '</tr>'].join(''));
-    }
+    setInterval(checkStatus, 5000);
 
     $('input[name=recordStatus]').click(function(e) {
         if($(e.target).attr('checked'))
@@ -372,6 +386,31 @@ $(function(){
             $(e.target).attr('checked', 'checked');
     });
 });
+
+Date.prototype.format = function(fmt)   
+{ //author: meizz   
+  var o = {   
+    "M+" : this.getMonth()+1,                 //月份   
+    "d+" : this.getDate(),                    //日   
+    "h+" : this.getHours(),                   //小时   
+    "m+" : this.getMinutes(),                 //分   
+    "s+" : this.getSeconds(),                 //秒   
+    "q+" : Math.floor((this.getMonth()+3)/3), //季度   
+    "S"  : this.getMilliseconds()             //毫秒   
+  };   
+  if(/(y+)/.test(fmt))   
+    fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
+  for(var k in o)   
+    if(new RegExp("("+ k +")").test(fmt))   
+  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
+  return fmt;   
+}
+Date.prototype.addDays = function(days)
+{
+    var dat = new Date(this.valueOf());
+    dat.setDate(dat.getDate() + days);
+    return dat;
+}
         </script>
     </body>
 </html>

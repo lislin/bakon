@@ -1,5 +1,6 @@
 package cn.bakon.web;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class HomeController {
 	@RequestMapping(value = "/api/updateEquipments", method = RequestMethod.POST)
 	@ResponseBody
 	public void updateEquipments(@RequestBody List<Equipment> equipments) {
+		this.statusRepository.save(new EquipmentStatus("T01", "T", "127.0.0.1", 1, new Date(), "80", "80", "正常"));
+		this.statusRepository.save(new EquipmentStatus("W01", "W", "127.0.0.1", 1, new Date(), "80", "80", "异常"));
+		this.statusRepository.save(new EquipmentStatus("W02", "W", "127.0.0.1", 2, new Date(), "80", "80", "异常"));
 		this.equipmentRepository.deleteAll();
 		this.equipmentRepository.save(equipments);
 	}
@@ -40,10 +44,5 @@ public class HomeController {
 	@ResponseBody
 	public List<EquipmentStatus> getAllStatus() {
 		return this.statusRepository.findByCurrent(true);
-	}
-	
-	@RequestMapping(value = "/api/getAllStatus", method = RequestMethod.GET)
-	public Iterable<EquipmentStatus> findAllStatus(@QuerydslPredicate Predicate predicate) {
-		return this.statusRepository.findAll(predicate);
 	}
 }
