@@ -28,7 +28,7 @@ joint.shapes.feature.E = joint.dia.Element.extend({
                 'text-anchor': 'end',
             }
         },
-        setting: { type: 'E', position: '', host: '', port: '1' }
+        setting: { type: 'E', position: '', host: '', port: '1', threshold: '' }
     }, joint.dia.Element.prototype.defaults)
 });
 
@@ -50,7 +50,7 @@ joint.shapes.feature.W = joint.dia.Element.extend({
                 'text-anchor': 'end',
             }
         },
-        setting: { type: 'W', position: '', host: '', port: '1' }
+        setting: { type: 'W', position: '', host: '', port: '1', threshold: '' }
     }, joint.dia.Element.prototype.defaults)
 });
 
@@ -72,6 +72,6 @@ joint.shapes.feature.T = joint.dia.Element.extend({
                 'text-anchor': 'end',
             }
         },
-        setting: { type: 'T', position: '', host: '', port: '1' }
+        setting: { type: 'T', position: '', host: '', port: '1', threshold: '' }
     }, joint.dia.Element.prototype.defaults)
 });

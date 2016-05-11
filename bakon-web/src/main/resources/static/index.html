@@ -43,7 +43,7 @@
     <body>
         <div class="wrap" style="min-height:100%">
             <div style="font-size:20px;text-align:center;margin-top:30px">
-                <img src="images/pages/Logo.png" width="150px" />
+                <img src="images/pages/logo.png" width="150px" />
                 <span>智能静电防控管理系统</span>
             </div>
             <div style="background-image:url(images/pages/time.png);width:290px;height:75px;position:absolute;right:30px; top:20px">
@@ -63,7 +63,7 @@
                 <div id="paper"></div>
             </div>
         </div>
-        <div id="bottom" style="margin-top:-90px;width:100%;  text-align:center;font-size:13px">
+        <div id="bottom">
             <div style="height:30px">版权所有：深圳市白光电子科技有限公司</div>
             <table style="width:100%;height:110px; background-image:url(images/pages/bt_back.png);background-repeat: repeat-x;">
                 <tr>
@@ -202,7 +202,7 @@
                 版权所有：
                 </div>
                 <div style="float:left;padding-top:30px;padding-right:10px">
-                    <img src="images/pages/Logo.png" width="100px" />
+                    <img src="images/pages/logo.png" width="100px" />
                 </div>
                 <div style="float:left;line-height:20px;border-style:none none none solid;border-width:1px; padding:10px">
                     智能静电防控管理系统<br />
@@ -267,16 +267,12 @@ function clock() {
 
 function checkStatus() {
     $.getJSON( "/api/getAllStatus", function(data) {
-        // FIXME mock
-        data = [
-            { type: 'W', host: '', port: 1, status: '异常' },
-        ];
         for (var i = 0; i < data.length; i++) {
             var s = data[i];
             var m = all[parseKey(s)];
             if(!m)
                 continue;
-            warning(m, s.status == '异常');
+            warning(m, s.status);
         }
     });
 }
@@ -284,15 +280,17 @@ function checkStatus() {
 function alarm() {
 }
 
+var warningColor = { '异常': 'red', '离线': 'white'};
 function warning(m, v) {
-    if(v) {
-        m.warningColor = 'black';
-        m.warning = setInterval(function() {
-            m.attr('.label/fill', m.warningColor = (m.warningColor == 'black' ? 'red' : 'black'));
-        }, 200);
-    } else
+    if(v == '正常') {
         clearInterval(m.warning);
+        return;
+    }
 
+    m.warningColor = 'black';
+    m.warning = setInterval(function() {
+        m.attr('.label/fill', m.warningColor = (m.warningColor == 'black' ? warningColor[v] : 'black'));
+    }, 200);        
 }
 
 function showSetting() {

@@ -37,10 +37,11 @@ public class HomeControllerTest {
 	public void testMonitor() throws Exception {
 		this.mvc.perform(get("/monitor"))
 				.andExpect(status().isOk())
-				.andExpect(content().string(containsString("html")))
+				.andExpect(content().string(containsString("id")))
 				.andDo(new ResultHandler() {
 					@Override
 					public void handle(MvcResult result) throws Exception {
+						System.out.println(result);
 					}
 				});
 	}

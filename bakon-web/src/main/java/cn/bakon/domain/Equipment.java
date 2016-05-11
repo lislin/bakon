@@ -27,15 +27,19 @@ public class Equipment implements Serializable {
 	// 1/2/3
 	@Column
 	private int port;
+	// +-80
+	@Column
+	private String threshold;
 
 	protected Equipment() {
 	}
 
-	public Equipment(String position, String type, String host, int port) {
+	public Equipment(String position, String type, String host, int port, String threshold) {
 		this.position = position;
 		this.type = type;
 		this.host = host;
 		this.port = port;
+		this.threshold = threshold;
 	}
 
 	public String getPosition() {
@@ -52,5 +56,9 @@ public class Equipment implements Serializable {
 
 	public int getPort() {
 		return this.port;
+	}
+
+	public String getThreshold() {
+		return this.threshold;
 	}
 }

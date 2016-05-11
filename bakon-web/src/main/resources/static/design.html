@@ -28,7 +28,7 @@
                 <div id="paper"></div>
             </div>
         </div>
-        <div id="bottom" style="width:100%;text-align:center;font-size:13px">
+        <div id="bottom">
             <div style="height:30px">版权所有：深圳市白光电子科技有限公司</div>
             
             <div style="width:900px;margin:auto">
@@ -120,7 +120,7 @@
                 </div>
                 <div>
                     设定标准：<br/>
-                    <input style="width:80px" />
+                    <input id="setting_feature_threshold" style="width:80px" />
                 </div>
             </div>
         </div>
@@ -278,11 +278,13 @@ paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
         $('#setting_feature_position').val(cellView.model.attributes.setting.position);
         $('#setting_feature_host').val(cellView.model.attributes.setting.host);
         $('#setting_feature_port').find('option[value="' + cellView.model.attributes.setting.port + '"]').attr("selected","true");
+        $('#setting_feature_threshold').val(cellView.model.attributes.setting.threshold);
 
         $('#setting_feature input,#setting_feature select').unbind().change(function() {
             cellView.model.attributes.setting.position = $('#setting_feature_position').val();
             cellView.model.attributes.setting.host = $('#setting_feature_host').val();
             cellView.model.attributes.setting.port = $("#setting_feature_port").find("option:selected").text();
+            cellView.model.attributes.setting.threshold = $('#setting_feature_threshold').val();
             cellView.model.attr('.label/text', cellView.model.attributes.setting.type + cellView.model.attributes.setting.position);
         });
         return;

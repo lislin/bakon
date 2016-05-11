@@ -28,7 +28,6 @@ public class EquipmentStatusRecord implements Serializable {
 	// 1/2/3
 	@Column
 	private int port;
-
 	@Column
 	private Date time;
 	// +80
