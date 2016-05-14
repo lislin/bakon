@@ -101,7 +101,7 @@ public class HomeController {
 					e.getPort(),
 					new Date(),
 					value,
-					e.getThreshold(), statusStr);
+					e.getThresholdPhase(), statusStr);
 			status.setCurrent(true);
 		}
 

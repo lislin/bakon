@@ -1,11 +1,17 @@
 package cn.bakon.domain;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 // 设备定义
 @Entity
@@ -27,20 +33,10 @@ public class Equipment implements Serializable {
 	// 1/2/3
 	@Column
 	private int port;
-	// +-80
-	@Column
-	private String threshold;
-
-	protected Equipment() {
-	}
-
-	public Equipment(String position, String type, String host, int port, String threshold) {
-		this.position = position;
-		this.type = type;
-		this.host = host;
-		this.port = port;
-		this.threshold = threshold;
-	}
+	// +-80 [+80, -80]
+	@ElementCollection()
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<String> threshold;
 
 	public String getPosition() {
 		return this.position;
@@ -58,7 +54,19 @@ public class Equipment implements Serializable {
 		return this.port;
 	}
 
-	public String getThreshold() {
+	public List<String> getThreshold() {
 		return this.threshold;
+	}
+
+	public String getThresholdPhase() {
+		if ("D".equalsIgnoreCase(type)) {
+			if (this.threshold.size() == 0)
+				return "未设置";
+			if (this.threshold.size() == 1)
+				return "+" + this.threshold.get(0) + "v";
+			if (this.threshold.size() >= 2)
+				return "+" + this.threshold.get(0) + "v;-" + this.threshold.get(1) + "v";
+		}
+		return Arrays.toString(this.threshold.toArray());
 	}
 }

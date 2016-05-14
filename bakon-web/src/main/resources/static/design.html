@@ -100,15 +100,15 @@
             </div>
         </div>
 
-        <div id="setting_feature" class="setting" style="display:none;position:absolute;right:50px;top:30px; text-align:left; line-height:20px;border-style: solid; border-width: 1px; border-color:#000; background-color:#F2F2F2;padding:10px">
+        <div id="setting_feature" class="setting">
             <div>
                 <div>
                     位置信息：<br/>
-                    <input id="setting_feature_position" style="width:80px" />
+                    <input id="setting_feature_position"/>
                 </div>
                 <div>
                     机器IP：<br/>
-                    <input id="setting_feature_host" style="width:80px" />
+                    <input id="setting_feature_host"/>
                 </div>
                 <div>
                     机器端口：<br/>
@@ -118,24 +118,30 @@
                         <option value="3">3</option>
                     </select>
                 </div>
-                <div>
+                <div id="threshold_D" class="threshold">
                     设定标准：<br/>
-                    <input id="setting_feature_threshold" style="width:80px" />
+                    +
+                    <input id="setting_feature_threshold_D0" style="width:40px" />
+                    -
+                    <input id="setting_feature_threshold_D1" style="width:40px" />
+                </div>
+                <div style="margin-top: 10px">
+                    <button id="setting_feature_del">删除</button>
                 </div>
             </div>
         </div>
 
-        <div id="setting_block" class="setting" style="display:none;position:absolute;right:50px;top:30px; text-align:left; line-height:20px;border-style: solid; border-width: 1px; border-color:#000; background-color:#F2F2F2;padding:10px">
+        <div id="setting_block" class="setting">
             <div>
                 <div>
                     线框文本描述：<br/>
-                    <input id="setting_block_label" style="width:200px" />
+                    <input id="setting_block_label" />
                     <br/>
                     宽度：<br/>
-                    <input id="setting_block_width" style="width:200px" />
+                    <input id="setting_block_width" />
                     <br/>
                     高度：<br/>
-                    <input id="setting_block_height" style="width:200px" />
+                    <input id="setting_block_height" />
                 </div>
             </div>
         </div>
@@ -281,20 +287,41 @@ paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
         || cellView.model instanceof joint.shapes.feature.W
         || cellView.model instanceof joint.shapes.feature.T
         || cellView.model instanceof joint.shapes.feature.D) {
+        var s = cellView.model.attributes.setting;
         $('.setting').hide();
         $('#setting_feature').show();
-        $('#setting_feature_position').val(cellView.model.attributes.setting.position);
-        $('#setting_feature_host').val(cellView.model.attributes.setting.host);
-        $('#setting_feature_port').find('option[value="' + cellView.model.attributes.setting.port + '"]').attr("selected","true");
-        $('#setting_feature_threshold').val(cellView.model.attributes.setting.threshold);
+        $('#setting_feature_position').val(s.position);
+        $('#setting_feature_host').val(s.host);
+        $('#setting_feature_port').find('option[value="' + s.port + '"]').attr("selected","true");
+        // 不同类型的设定标准
+        $('#setting_feature .threshold').hide();
+        $('#setting_feature #threshold_' + s.type).show();
+        var threshold = s.threshold;
+        for (var i = 0; i < threshold.length; i++) {
+            $('#setting_feature_threshold_' + s.type + i).val(threshold[i]);
+        }
+        
 
         $('#setting_feature input,#setting_feature select').unbind().change(function() {
-            cellView.model.attributes.setting.position = $('#setting_feature_position').val();
-            cellView.model.attributes.setting.host = $('#setting_feature_host').val();
-            cellView.model.attributes.setting.port = $("#setting_feature_port").find("option:selected").text();
-            cellView.model.attributes.setting.threshold = $('#setting_feature_threshold').val();
+            s.position = $('#setting_feature_position').val();
             // 目前position完全自定义，不与类型强关联
             cellView.model.attr('.label/text', cellView.model.attributes.setting.position);
+
+            s.host = $('#setting_feature_host').val();
+            s.port = $("#setting_feature_port").find("option:selected").text();
+
+            s.threshold = [];
+            var l = $('#setting_feature #threshold_' + s.type).find('input').size();
+            for (var i = 0; i < l; i++)
+                s.threshold[i] = $('#setting_feature_threshold_' + s.type + i).val();
+        });
+
+        $('#setting_feature #setting_feature_del').unbind().click(function() {
+            if(!confirm('确定要删除？'))
+                return;
+            cellView.remove();
+            cellView.model.remove();
+            $('.setting').hide();
         });
         return;
     }

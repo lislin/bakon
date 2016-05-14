@@ -52,6 +52,16 @@ div.dialog div.line {
     border-style: solid none none none; border-width: 1px; border-color:gray;margin:5px
 }
 
+div.setting {
+    display:none;position:absolute;right:50px;top:30px; text-align:left; line-height:20px;border-style: solid; border-width: 1px; border-color:#000; background-color:#F2F2F2;padding:10px
+}
+div.setting input {
+    width: 200px
+}
+div.setting .threshold {
+    display: none;
+}
+
 /* elements */
 .devs text {
     text-transform: uppercase;
