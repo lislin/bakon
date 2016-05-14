@@ -75,3 +75,25 @@ joint.shapes.feature.T = joint.dia.Element.extend({
         setting: { type: 'T', position: '', host: '', port: '1', threshold: '' }
     }, joint.dia.Element.prototype.defaults)
 });
+
+joint.shapes.feature.D = joint.dia.Element.extend({
+    markup: '<g class="rotatable"><text class="label"/><image/></g>',
+
+    defaults: joint.util.deepSupplement({
+        type: 'feature.D',
+        size: { width: 50, height: 50 },
+        attrs: {
+            image: {
+                width: 48, height: 48,
+                'xlink:href': 'images/features/dh.png'
+            },
+            '.label': {
+                'font-weight': '800',
+                ref: 'image', 'ref-x': 38, 'ref-y': -15,
+                'font-family': 'Courier New', 'font-size': 14,
+                'text-anchor': 'end',
+            }
+        },
+        setting: { type: 'D', position: '', host: '', port: '1', threshold: '' }
+    }, joint.dia.Element.prototype.defaults)
+});

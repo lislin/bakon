@@ -84,8 +84,8 @@
                         <span>离子风棒(B)</span>
                     </span>
 
-                    <span class="feature" title="残留电荷(D)">
-                        <img src="images/features/dh.png" width="55px"/>
+                    <span class="feature" title="残留电荷(D)" onclick="addFeature('D')">
+                        <img src="images/features/dh.png" width="55px" />
                         <br/>
                         <span>残留电荷(D)</span>
                     </span>
@@ -191,6 +191,13 @@ function addFeature(t) {
                 }
             )
         ]);
+    if(t == 'D')
+        graph.addCells([new joint.shapes.feature.D(
+                {
+                    position: { x: 250, y: 100 },
+                }
+            )
+        ]);
 }
 
 /* custom highlighting */
@@ -272,7 +279,8 @@ paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
 
     if(cellView.model instanceof joint.shapes.feature.E
         || cellView.model instanceof joint.shapes.feature.W
-        || cellView.model instanceof joint.shapes.feature.T) {
+        || cellView.model instanceof joint.shapes.feature.T
+        || cellView.model instanceof joint.shapes.feature.D) {
         $('.setting').hide();
         $('#setting_feature').show();
         $('#setting_feature_position').val(cellView.model.attributes.setting.position);
@@ -285,7 +293,8 @@ paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
             cellView.model.attributes.setting.host = $('#setting_feature_host').val();
             cellView.model.attributes.setting.port = $("#setting_feature_port").find("option:selected").text();
             cellView.model.attributes.setting.threshold = $('#setting_feature_threshold').val();
-            cellView.model.attr('.label/text', cellView.model.attributes.setting.type + cellView.model.attributes.setting.position);
+            // 目前position完全自定义，不与类型强关联
+            cellView.model.attr('.label/text', cellView.model.attributes.setting.position);
         });
         return;
     }

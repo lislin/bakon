@@ -111,6 +111,7 @@
                             <option value="E">设备接地</option>
                             <option value="W">腕带接地</option>
                             <option value="T">台垫接地</option>
+                            <option value="D">残留电荷</option>
                         </select>
                         <span>筛选状态：</span>
                         <select id="dialog_records_status" style="width:60px">
@@ -339,7 +340,7 @@ function queryStatus() {
                     '<tr>',
                     '<td>' + time.toLocaleDateString('zh-cn', { year: 'numeric', month: 'short', day: 'numeric' }) + '</td>',
                     '<td>' + ('0' + time.getHours()).slice(-2) + ':' + ('0' + time.getMinutes()).slice(-2) + '</td>',
-                    '<td>' + r.duration + '</td>',
+                    '<td>' + parseDuration(r.duration) + '</td>',
                     '<td>' + r.type + '</td>',
                     '<td>' + r.position + '</td>',
                     '<td>' + r.host + '</td>',
@@ -352,10 +353,22 @@ function queryStatus() {
     });
 }
 
+function parseDuration(v) {
+    if(v == 0)
+        return '';
+    var s = v/1000;
+    if(s < 1)
+        return v + '毫秒';
+    if(s > 1 && s < 60)
+        return s + '秒';
+    return s/60 + '分钟';
+}
+
 paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
     if(cellView.model instanceof joint.shapes.feature.E
             || cellView.model instanceof joint.shapes.feature.W
-            || cellView.model instanceof joint.shapes.feature.T) {
+            || cellView.model instanceof joint.shapes.feature.T
+            || cellView.model instanceof joint.shapes.feature.D) {
         $('#dialog_records').show();
         $('#dialog_records_begin').val(new Date().format("yyyy-MM-dd"));
         $('#dialog_records_end').val(new Date().addDays(1).format("yyyy-MM-dd"));
