@@ -296,6 +296,7 @@ paper.on('cell:pointerclick', function(cellView, evt, x, y ) {
         // 不同类型的设定标准
         $('#setting_feature .threshold').hide();
         $('#setting_feature #threshold_' + s.type).show();
+        $('#setting_feature .threshold input').val('')
         var threshold = s.threshold;
         for (var i = 0; i < threshold.length; i++) {
             $('#setting_feature_threshold_' + s.type + i).val(threshold[i]);
