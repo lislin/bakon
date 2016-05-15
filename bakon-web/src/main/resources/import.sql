@@ -1,0 +1,1 @@
+insert into Setting(id,graph,frequency) values(1,'{}',200)

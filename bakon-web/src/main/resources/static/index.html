@@ -78,7 +78,14 @@
                     <td width="100px"><a href="javascript:$('#dialog_records').show()"><img src="images/pages/jl.png" width="50px"/><div>记录查询</div></a></td>
                     <td width="100px"><a href="javascript:alert('暂不支持')"><img src="images/pages/sjk.png" width="50px"/><div>数据库管理</div></a></td>
                     <td width="100px"><a href="javascript:$('#dialog_help').show()"><img src="images/pages/bz.png" width="50px"/><div>帮 助</div></a></td>
-                    <td><a href="#"><img src="images/pages/tc.png" width="50px" /><div>退 出</div></a></td>
+                    <td>
+                        <form action="/logout" method="post">
+                            <a href="#" onclick="$(this).parent().submit()">
+                                <img src="images/pages/tc.png" width="50px" />
+                                <div>退 出</div>
+                            </a>
+                        </form>
+                    </td>
                 </tr>
             </table>
         </div>
